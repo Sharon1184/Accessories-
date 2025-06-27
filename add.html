@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConceptDash - Authentic Products</title>  <!-- Tailwind CSS -->  <script src="https://cdn.tailwindcss.com"></script>  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#e63946'
+          },
+          borderRadius: {
+            button: '8px'
+          }
+        }
+      }
+    }
+  </script>  <!-- Firebase -->  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>  <!-- Remix Icon -->  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Navbar -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="text-xl font-bold text-primary">ConceptDash</div>
+      <nav class="flex space-x-6 text-sm items-center">
+        <a href="#" class="flex items-center text-gray-700 hover:text-primary">
+          <i class="ri-home-line mr-1 text-lg"></i> Home
+        </a>
+        <a href="#categoriesContainer" class="flex items-center text-gray-700 hover:text-primary">
+          <i class="ri-apps-line mr-1 text-lg"></i> Categories
+        </a>
+        <a href="#addItemForm" class="flex items-center text-gray-700 hover:text-primary">
+          <i class="ri-add-line mr-1 text-lg"></i> Add Item
+        </a>
+        <a href="#" class="flex items-center text-gray-700 hover:text-primary">
+          <i class="ri-shopping-cart-line mr-1 text-lg"></i> Cart
+        </a>
+        <a href="#" class="flex items-center text-gray-700 hover:text-primary">
+          <i class="ri-user-line mr-1 text-lg"></i> Login
+        </a>
+      </nav>
+    </div>
+  </header>  <!-- Main Content -->  <main class="pt-24 px-4">
+    <!-- Add Item Form -->
+    <section class="max-w-md mx-auto p-4 bg-white rounded shadow space-y-4 mt-4">
+      <h2 class="text-lg font-bold text-center text-primary">Add New Item</h2>
+      <form id="addItemForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Item Name" class="w-full border p-2 rounded" required />
+        <textarea id="description" placeholder="Description" class="w-full border p-2 rounded"></textarea>
+        <input type="number" id="price" placeholder="Price" class="w-full border p-2 rounded" required />
+        <select id="category" class="w-full border p-2 rounded" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Phones">Phones</option>
+          <option value="Laptops">Laptops</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Beauty">Beauty</option>
+        </select>
+        <input type="file" id="image" accept="image/*" class="w-full" required />
+        <button type="submit" class="bg-primary text-white py-2 px-4 rounded w-full">Add Item</button>
+      </form>
+    </section><!-- Categories Section -->
+<section id="categoriesContainer" class="mt-10"></section>
+
+  </main>  <!-- Footer -->  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+    &copy; 2025 ConceptDash. All rights reserved.
+  </footer>  <!-- App JS -->  <script src="app.js"></script></body>
+</html>
