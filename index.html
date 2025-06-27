@@ -1,398 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChineseMarket - Order Authentic Chinese Products</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#e63946',secondary:'#457b9d'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #e63946;
-            cursor: pointer;
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #e63946;
-            cursor: pointer;
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .custom-checkbox {
-            position: relative;
-            padding-left: 28px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .custom-checkbox input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
-        .checkmark {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 18px;
-            width: 18px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .custom-checkbox:hover input ~ .checkmark {
-            border-color: #b3b3b3;
-        }
-        .custom-checkbox input:checked ~ .checkmark {
-            background-color: #e63946;
-            border-color: #e63946;
-        }
-        .checkmark:after {
-            content: "";
-            position: absolute;
-            display: none;
-        }
-        .custom-checkbox input:checked ~ .checkmark:after {
-            display: block;
-        }
-        .custom-checkbox .checkmark:after {
-            left: 6px;
-            top: 2px;
-            width: 5px;
-            height: 10px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #e63946;
-        }
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-        .custom-select {
-            position: relative;
-            display: inline-block;
-        }
-        .custom-select-selected {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background-color: white;
-            cursor: pointer;
-        }
-        .custom-select-options {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            margin-top: 0.25rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-        .custom-select-option {
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-        }
-        .custom-select-option:hover {
-            background-color: #f3f4f6;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChineseMarket - Order Authentic Chinese Products</title>
+  <script src="https:                                       
+  <script>tailwind.config={theme:{extend:{colors:{primary:'                                                                                                                                                                                           
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https:                                 
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https:                                                                                                 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Header Section -->
-    <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <!-- Logo -->
-            <div class="flex items-center">
-                <a href="#" class="text-3xl font-['Pacifico'] text-primary">logo</a>
+  <!-- Header Section -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a href="                                                           
+      </div>
+      <!-- Search Bar with Country Selector -->
+      <div class="flex-1 max-w-2xl mx-8">
+        <div class="relative flex">
+          <div class="custom-select w-32">
+            <div class="custom-select-selected text-sm flex items-center bg-gray-100 border-r-0 rounded-l-button rounded-r-none h-12">
+              <span>USA</span>
+              <div class="w-4 h-4 flex items-center justify-center ml-2">
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
             </div>
-            
-            <!-- Search Bar with Country Selector -->
-            <div class="flex-1 max-w-2xl mx-8">
-                <div class="relative flex">
-                    <div class="custom-select w-32">
-                        <div class="custom-select-selected text-sm flex items-center bg-gray-100 border-r-0 rounded-l-button rounded-r-none h-12">
-                            <span>USA</span>
-                            <div class="w-4 h-4 flex items-center justify-center ml-2">
-                                <i class="ri-arrow-down-s-line"></i>
-                            </div>
-                        </div>
-                        <div class="custom-select-options">
-                            <div class="custom-select-option text-sm">USA</div>
-                            <div class="custom-select-option text-sm">Canada</div>
-                            <div class="custom-select-option text-sm">UK</div>
-                            <div class="custom-select-option text-sm">Australia</div>
-                            <div class="custom-select-option text-sm">Germany</div>
-                        </div>
-                    </div>
-                    <input type="text" placeholder="Search for authentic Chinese products..." class="flex-1 h-12 pl-4 pr-10 border-none focus:outline-none focus:ring-2 focus:ring-primary rounded-r-button">
-                    <button class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-gray-500 hover:text-primary">
-                        <div class="w-5 h-5 flex items-center justify-center">
-                            <i class="ri-search-line"></i>
-                        </div>
-                    </button>
-                </div>
+            <div class="custom-select-options">
+              <div class="custom-select-option text-sm">USA</div>
+              <div class="custom-select-option text-sm">Canada</div>
+              <div class="custom-select-option text-sm">UK</div>
+              <div class="custom-select-option text-sm">Australia</div>
+              <div class="custom-select-option text-sm">Germany</div>
             </div>
-            
-            <!-- User Actions -->
-            <div class="flex items-center space-x-6">
-                <!-- Language Selector -->
-                <div class="custom-select">
-                    <div class="custom-select-selected text-sm flex items-center">
-                        <div class="w-5 h-5 flex items-center justify-center mr-1">
-                            <i class="ri-global-line"></i>
-                        </div>
-                        <span>English</span>
-                        <div class="w-4 h-4 flex items-center justify-center ml-1">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </div>
-                    <div class="custom-select-options">
-                        <div class="custom-select-option text-sm">English</div>
-                        <div class="custom-select-option text-sm">简体中文</div>
-                        <div class="custom-select-option text-sm">繁體中文</div>
-                        <div class="custom-select-option text-sm">Español</div>
-                    </div>
-                </div>
-                
-                <!-- User Account -->
-                <div class="relative group">
-                    <button class="flex items-center text-gray-700 hover:text-primary">
-                        <div class="w-6 h-6 flex items-center justify-center">
-                            <i class="ri-user-line"></i>
-                        </div>
-                        <span class="ml-1 text-sm hidden md:inline">Account</span>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-2 z-10 hidden group-hover:block">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign In</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Register</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a>
-                    </div>
-                </div>
-                
-                <!-- Shopping Cart -->
-                <div class="relative">
-                    <button class="flex items-center text-gray-700 hover:text-primary">
-                        <div class="w-6 h-6 flex items-center justify-center">
-                            <i class="ri-shopping-cart-2-line"></i>
-                        </div>
-                        <span class="ml-1 text-sm hidden md:inline">Cart</span>
-                        <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                    </button>
-                </div>
+          </div>
+          <input type="text" placeholder="Search for authentic Chinese products..." class="flex-1 h-12 pl-4 pr-10 border-none focus:outline-none focus:ring-2 focus:ring-primary rounded-r-button">
+          <button class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-gray-500 hover:text-primary">
+            <div class="w-5 h-5 flex items-center justify-center">
+              <i class="ri-search-line"></i>
             </div>
+          </button>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="pt-20 pb-12">
-        <!-- Hero Banner -->
-        <section class="relative h-96 overflow-hidden">
-            <div style="background-image: url('https://readdy.ai/api/search-image?query=A%20beautifully%20arranged%20display%20of%20authentic%20Chinese%20food%20products%20including%20tea%20sets%2C%20snacks%2C%20spices%2C%20and%20traditional%20ingredients.%20The%20composition%20shows%20vibrant%20packaging%20with%20Chinese%20characters%2C%20arranged%20on%20a%20clean%2C%20minimalist%20surface%20with%20soft%20natural%20lighting.%20The%20background%20is%20simple%20with%20subtle%20Asian%20design%20elements&width=1600&height=800&seq=1&orientation=landscape');" class="absolute inset-0 bg-cover bg-center"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
-            <div class="container mx-auto px-4 h-full flex items-center relative z-10">
-                <div class="max-w-lg text-white">
-                    <h1 class="text-4xl font-bold mb-4">Authentic Chinese Delicacies Delivered to Your Door</h1>
-                    <p class="text-lg mb-6">Explore thousands of genuine Chinese food products, snacks, and ingredients from every region of China.</p>
-                    <div class="flex space-x-4">
-                        <button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 font-medium !rounded-button whitespace-nowrap">Shop Now</button>
-                        <button class="bg-white hover:bg-gray-100 text-gray-800 px-6 py-3 font-medium !rounded-button whitespace-nowrap">View Deals</button>
-                    </div>
-                </div>
+      </div>
+      <!-- User Actions -->
+      <div class="flex items-center space-x-6">
+        <!-- Language Selector -->
+        <div class="custom-select">
+          <div class="custom-select-selected text-sm flex items-center">
+            <div class="w-5 h-5 flex items-center justify-center mr-1">
+              <i class="ri-global-line"></i>
             </div>
-        </section>
-
-        <!-- Category Navigation -->
-        <section class="py-12 bg-white">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl font-bold mb-8 text-center">Browse Categories</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-restaurant-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">Food</span>
-                    </a>
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-cup-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">Beverages</span>
-                    </a>
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-cake-3-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">Snacks</span>
-                    </a>
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-seedling-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">Spices</span>
-                    </a>
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-tea-cup-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">Tea</span>
-                    </a>
-                    <a href="#" class="flex flex-col items-center p-4 rounded bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="w-16 h-16 flex items-center justify-center text-primary mb-3">
-                            <i class="ri-more-line ri-2x"></i>
-                        </div>
-                        <span class="text-sm font-medium">More</span>
-                    </a>
-                </div>
+            <span>English</span>
+            <div class="w-4 h-4 flex items-center justify-center ml-1">
+              <i class="ri-arrow-down-s-line"></i>
             </div>
-        </section>
-
-        <!-- Product Listing with Filters -->
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <h2 class="text-2xl font-bold mb-8">Popular Products</h2>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Filter Sidebar -->
-                    <div class="w-full md:w-64 bg-white p-6 rounded shadow-sm h-fit">
-                        <div class="mb-6">
-                            <h3 class="font-semibold mb-3">Price Range</h3>
-                            <div class="flex items-center mb-2">
-                                <span class="text-sm text-gray-600">$0</span>
-                                <span class="flex-1 mx-2 text-center text-sm text-gray-600">$50</span>
-                                <span class="text-sm text-gray-600">$100</span>
-                            </div>
-                            <input type="range" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded appearance-none cursor-pointer">
-                            <div class="flex items-center mt-3 space-x-2">
-                                <input type="number" min="0" max="100" value="0" class="w-20 p-2 text-sm border rounded">
-                                <span>-</span>
-                                <input type="number" min="0" max="100" value="50" class="w-20 p-2 text-sm border rounded">
-                                <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 text-sm !rounded-button whitespace-nowrap">Apply</button>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h3 class="font-semibold mb-3">Region</h3>
-                            <div class="space-y-2">
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Sichuan
-                                    <input type="checkbox" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Guangdong
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Beijing
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Shanghai
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Yunnan
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <button class="text-primary text-sm mt-2">+ Show more</button>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h3 class="font-semibold mb-3">Dietary Preferences</h3>
-                            <div class="space-y-2">
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Vegetarian
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Spicy
-                                    <input type="checkbox" checked>
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Gluten-Free
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="custom-checkbox flex items-center text-sm">
-                                    Sugar-Free
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <h3 class="font-semibold mb-3">Brands</h3>
-                            <div class="space-y-2">
-                                <label class="custom-ch
+          </div>
+          <div class="custom-select-options">
+            <div class="custom-select-option text-sm">English</div>
+            <div class="custom-select-option text-sm">简体中文</div>
+            <div class="custom-select-option text-sm">繁體中文</div>
+            <div class="custom-select-option text-sm">Español</div>
+          </div>
+        </div>
+        <!-- User Account -->
+        <div class="relative group">
+          <button class="flex items-center text-gray-700 hover:text-primary">
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-user-line"></i>
+            </div>
+            <span class="
+      
