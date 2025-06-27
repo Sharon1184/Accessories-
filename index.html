@@ -1,77 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ChineseMarket - Order Authentic Chinese Products</title>
-  <script src="https:                                       
-  <script>tailwind.config={theme:{extend:{colors:{primary:'                                                                                                                                                                                           
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https:                                 
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-  <link href="https:                                                                                                 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#e63946'
+          },
+          borderRadius: {
+            button: '8px'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+
+  <!-- Remix Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-gray-50">
+
   <!-- Header Section -->
   <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center">
-        <a href="                                                           
+        <a href="#" class="text-xl font-bold text-primary font-pacifico">ChineseMarket</a>
       </div>
+
       <!-- Search Bar with Country Selector -->
       <div class="flex-1 max-w-2xl mx-8">
         <div class="relative flex">
           <div class="custom-select w-32">
-            <div class="custom-select-selected text-sm flex items-center bg-gray-100 border-r-0 rounded-l-button rounded-r-none h-12">
+            <div class="custom-select-selected text-sm flex items-center bg-gray-100 border-r-0 rounded-l-button rounded-r-none h-12 px-2">
               <span>USA</span>
               <div class="w-4 h-4 flex items-center justify-center ml-2">
                 <i class="ri-arrow-down-s-line"></i>
               </div>
             </div>
-            <div class="custom-select-options">
-              <div class="custom-select-option text-sm">USA</div>
-              <div class="custom-select-option text-sm">Canada</div>
-              <div class="custom-select-option text-sm">UK</div>
-              <div class="custom-select-option text-sm">Australia</div>
-              <div class="custom-select-option text-sm">Germany</div>
+            <div class="custom-select-options hidden absolute bg-white border shadow-md mt-1">
+              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">USA</div>
+              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Canada</div>
+              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">UK</div>
+              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Australia</div>
+              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Germany</div>
             </div>
           </div>
-          <input type="text" placeholder="Search for authentic Chinese products..." class="flex-1 h-12 pl-4 pr-10 border-none focus:outline-none focus:ring-2 focus:ring-primary rounded-r-button">
+          <input type="text" placeholder="Search for authentic Chinese products..." class="flex-1 h-12 pl-4 pr-10 border-none focus:outline-none focus:ring-2 focus:ring-primary rounded-r-button" />
           <button class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-gray-500 hover:text-primary">
-            <div class="w-5 h-5 flex items-center justify-center">
-              <i class="ri-search-line"></i>
-            </div>
+            <i class="ri-search-line text-lg"></i>
           </button>
         </div>
       </div>
+
       <!-- User Actions -->
       <div class="flex items-center space-x-6">
         <!-- Language Selector -->
-        <div class="custom-select">
-          <div class="custom-select-selected text-sm flex items-center">
-            <div class="w-5 h-5 flex items-center justify-center mr-1">
-              <i class="ri-global-line"></i>
-            </div>
+        <div class="custom-select relative">
+          <div class="custom-select-selected text-sm flex items-center cursor-pointer">
+            <i class="ri-global-line mr-1"></i>
             <span>English</span>
-            <div class="w-4 h-4 flex items-center justify-center ml-1">
-              <i class="ri-arrow-down-s-line"></i>
-            </div>
+            <i class="ri-arrow-down-s-line ml-1"></i>
           </div>
-          <div class="custom-select-options">
-            <div class="custom-select-option text-sm">English</div>
-            <div class="custom-select-option text-sm">简体中文</div>
-            <div class="custom-select-option text-sm">繁體中文</div>
-            <div class="custom-select-option text-sm">Español</div>
+          <div class="custom-select-options hidden absolute bg-white border shadow-md mt-1">
+            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">English</div>
+            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">简体中文</div>
+            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">繁體中文</div>
+            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Español</div>
           </div>
         </div>
+
         <!-- User Account -->
         <div class="relative group">
           <button class="flex items-center text-gray-700 hover:text-primary">
-            <div class="w-6 h-6 flex items-center justify-center">
-              <i class="ri-user-line"></i>
-            </div>
-            <span class="
-      
+            <i class="ri-user-line text-xl"></i>
+            <span class="ml-2 text-sm hidden sm:inline">Account</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-24 px-4">
+    <div class="container mx-auto flex flex-wrap justify-center">
+      <!-- Product Card 1 -->
+      <div class="card max-w-xs w-full">
+        <img src="item-image.jpg" alt="Item Name" />
+        <h2>Item Name</h2>
+        <p>Item description</p>
+        <div class="price">$19.99</div>
+        <button>Add to Cart</button>
+      </div>
+
+      <!-- Product Card 2 -->
+      <div class="card max-w-xs w-full">
+        <img src="item-image2.jpg" alt="Item Name 2" />
+        <h2>Item Name 2</h2>
+        <p>Item description 2</p>
+        <div class="price">$29.99</div>
+        <button>Add to Cart</button>
+      </div>
+
+      <!-- Add more cards as needed -->
+    </div>
+  </main>
+
+</body>
+  </html>
