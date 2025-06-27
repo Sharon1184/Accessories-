@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChineseMarket - Order Authentic Chinese Products</title>
-
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
+  <title>ConceptDash - Authentic Products</title>  <!-- Tailwind CSS via CDN -->  <script src="https://cdn.tailwindcss.com"></script>  <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -20,106 +15,31 @@
         }
       }
     }
-  </script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  </script>  <!-- Google Fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-
-  <!-- Remix Icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />  <!-- Remix Icon -->  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />  <!-- Firebase -->  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>  <!-- Custom CSS -->  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-gray-50">
-
-  <!-- Header Section -->
-  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+<body class="bg-gray-50">  <!-- Header Section -->  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center">
-        <a href="#" class="text-xl font-bold text-primary font-pacifico">ChineseMarket</a>
-      </div>
+        <a href="#" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
+      </div><!-- Navigation Links -->
+  <nav class="flex space-x-6 text-sm items-center">
+    <a href="#" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+    <a href="#categoriesContainer" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
+    <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
+    <a href="#" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+    <a href="#" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+  </nav>
+</div>
 
-      <!-- Search Bar with Country Selector -->
-      <div class="flex-1 max-w-2xl mx-8">
-        <div class="relative flex">
-          <div class="custom-select w-32">
-            <div class="custom-select-selected text-sm flex items-center bg-gray-100 border-r-0 rounded-l-button rounded-r-none h-12 px-2">
-              <span>USA</span>
-              <div class="w-4 h-4 flex items-center justify-center ml-2">
-                <i class="ri-arrow-down-s-line"></i>
-              </div>
-            </div>
-            <div class="custom-select-options hidden absolute bg-white border shadow-md mt-1">
-              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">USA</div>
-              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Canada</div>
-              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">UK</div>
-              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Australia</div>
-              <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Germany</div>
-            </div>
-          </div>
-          <input type="text" placeholder="Search for authentic Chinese products..." class="flex-1 h-12 pl-4 pr-10 border-none focus:outline-none focus:ring-2 focus:ring-primary rounded-r-button" />
-          <button class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-gray-500 hover:text-primary">
-            <i class="ri-search-line text-lg"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- User Actions -->
-      <div class="flex items-center space-x-6">
-        <!-- Language Selector -->
-        <div class="custom-select relative">
-          <div class="custom-select-selected text-sm flex items-center cursor-pointer">
-            <i class="ri-global-line mr-1"></i>
-            <span>English</span>
-            <i class="ri-arrow-down-s-line ml-1"></i>
-          </div>
-          <div class="custom-select-options hidden absolute bg-white border shadow-md mt-1">
-            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">English</div>
-            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">简体中文</div>
-            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">繁體中文</div>
-            <div class="custom-select-option text-sm px-4 py-2 hover:bg-gray-100 cursor-pointer">Español</div>
-          </div>
-        </div>
-
-        <!-- User Account -->
-        <div class="relative group">
-          <button class="flex items-center text-gray-700 hover:text-primary">
-            <i class="ri-user-line text-xl"></i>
-            <span class="ml-2 text-sm hidden sm:inline">Account</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="pt-24 px-4">
-    <div class="container mx-auto flex flex-wrap justify-center">
-      <!-- Product Card 1 -->
-      <div class="card max-w-xs w-full">
-        <img src="item-image.jpg" alt="Item Name" />
-        <h2>Item Name</h2>
-        <p>Item description</p>
-        <div class="price">$19.99</div>
-        <button>Add to Cart</button>
-      </div>
-
-      <!-- Product Card 2 -->
-      <div class="card max-w-xs w-full">
-        <img src="item-image2.jpg" alt="Item Name 2" />
-        <h2>Item Name 2</h2>
-        <p>Item description 2</p>
-        <div class="price">$29.99</div>
-        <button>Add to Cart</button>
-      </div>
-
-      <!-- Add more cards as needed -->
-    </div>
-  </main>
-
-</body>
-  </html>
+  </header>  <!-- Main Content -->  <main class="pt-24 px-4 max-w-7xl mx-auto">
+    <!-- Categories + Products Display -->
+    <section id="categoriesContainer" class="mt-10">
+      <!-- Dynamic categories will be inserted here by app.js -->
+    </section>
+  </main>  <!-- Footer -->  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+    &copy; 2025 ConceptDash. All rights reserved.
+  </footer>  <!-- JS Logic -->  <script src="app.js"></script></body>
+</html>
