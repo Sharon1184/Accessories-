@@ -1,6 +1,6 @@
 // Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyD13EXAMPLE", // Replace with your actual API key
+  apiKey: "AIzaSyD13EXAMPLE", // Replace with your actual key
   authDomain: "food-ae7ff.firebaseapp.com",
   projectId: "food-ae7ff",
   storageBucket: "food-ae7ff.appspot.com",
@@ -12,46 +12,53 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Add Item Form Submission using URL input
-const form = document.getElementById("addItemForm");
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+// =======================
+// ADD ITEM FORM LOGIC
+// =======================
 
-  const name = form.name.value.trim();
-  const description = form.description.value.trim();
-  const price = parseFloat(form.price.value);
-  const category = form.category.value;
-  const imageUrl = form.imageUrl.value.trim(); // From URL input
-  const statusMessage = document.getElementById("statusMessage");
+const addForm = document.getElementById("addItemForm");
+if (addForm) {
+  addForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (!name || !price || !category || !imageUrl) {
-    statusMessage.textContent = "Please fill all fields and provide a valid image URL.";
-    statusMessage.classList.add("text-red-600");
-    return;
-  }
+    const name = addForm.name.value.trim();
+    const description = addForm.description.value.trim();
+    const price = parseFloat(addForm.price.value);
+    const category = addForm.category.value;
+    const imageUrl = addForm.imageUrl.value.trim();
+    const statusMessage = document.getElementById("statusMessage");
 
-  try {
-    await db.collection("products").add({
-      name,
-      description,
-      price,
-      category,
-      imageUrl,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    if (!name || !price || !category || !imageUrl) {
+      statusMessage.textContent = "❌ Please fill all fields properly!";
+      statusMessage.classList.add("text-red-600");
+      return;
+    }
 
-    statusMessage.textContent = "✅ Item added successfully!";
-    statusMessage.classList.remove("text-red-600");
-    statusMessage.classList.add("text-green-600");
-    form.reset();
-  } catch (error) {
-    console.error("Error adding item:", error);
-    statusMessage.textContent = "❌ Failed to add item.";
-    statusMessage.classList.add("text-red-600");
-  }
-});
+    try {
+      await db.collection("products").add({
+        name,
+        description,
+        price,
+        category,
+        imageUrl
+      });
 
-// Load and Display Products by Category
+      statusMessage.textContent = "✅ Item added successfully!";
+      statusMessage.classList.remove("text-red-600");
+      statusMessage.classList.add("text-green-600");
+      addForm.reset();
+    } catch (error) {
+      console.error("Error adding item:", error);
+      statusMessage.textContent = "❌ Failed to add item.";
+      statusMessage.classList.add("text-red-600");
+    }
+  });
+}
+
+// ==============================
+// DISPLAY ITEMS BY CATEGORY
+// ==============================
+
 const categories = ["Phones", "Laptops", "Clothing", "Beauty"];
 const container = document.getElementById("categoriesContainer");
 
@@ -59,11 +66,10 @@ if (container) {
   categories.forEach(category => {
     db.collection("products")
       .where("category", "==", category)
-      .orderBy("timestamp", "desc")
-      .limit(10)
       .get()
       .then(snapshot => {
         if (!snapshot.empty) {
+          console.log(`✅ Showing products for: ${category}`);
           let html = `<h2 class='text-xl font-bold mt-8 mb-2'>${category}</h2>
           <div class='flex space-x-4 overflow-x-auto pb-4'>`;
 
@@ -81,10 +87,12 @@ if (container) {
 
           html += `</div>`;
           container.innerHTML += html;
+        } else {
+          console.log(`ℹ️ No items found in category: ${category}`);
         }
       })
-      .catch(error => {
-        console.error("Error loading products:", error);
+      .catch(err => {
+        console.error(`❌ Error loading ${category}:`, err);
       });
   });
-}
+    }
