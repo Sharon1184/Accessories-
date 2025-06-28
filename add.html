@@ -22,7 +22,7 @@
     }
   </script>
 
-  <!-- Firebase -->
+  <!-- Firebase (Compat version) -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
@@ -64,7 +64,7 @@
         <input type="url" id="imageUrl" placeholder="Image URL" class="w-full border p-2 rounded" required />
         <button type="submit" class="bg-primary text-white py-2 px-4 rounded w-full">Add Item</button>
       </form>
-      <p id="statusMessage" class="text-center text-sm mt-2 text-green-600"></p>
+      <p id="statusMessage" class="text-center text-sm mt-2"></p>
     </section>
   </main>
 
@@ -73,11 +73,11 @@
     &copy; 2025 ConceptDash. All rights reserved.
   </footer>
 
-  <!-- Firebase Setup and Logic -->
+  <!-- Firebase Logic -->
   <script>
-    // Your Firebase Config
+    // ✅ Firebase Config (your actual project)
     const firebaseConfig = {
-      apiKey: "AIzaSyD13EXAMPLE",
+      apiKey: "AIzaSyAHhmbgDA_D13LcnEWgtr5Unu7uihBpGPE",
       authDomain: "food-ae7ff.firebaseapp.com",
       projectId: "food-ae7ff",
       storageBucket: "food-ae7ff.appspot.com",
@@ -85,11 +85,11 @@
       appId: "1:256095054979:web:22de2c16f9acb15f65a08f"
     };
 
-    // Initialize Firebase
+    // ✅ Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Form submission
+    // ✅ Handle Add Form
     document.getElementById('addItemForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -100,8 +100,9 @@
       const imageUrl = document.getElementById('imageUrl').value.trim();
       const statusMessage = document.getElementById('statusMessage');
 
-      if (!name || !price || !category || !imageUrl) {
-        statusMessage.textContent = "Please fill all required fields!";
+      if (!name || isNaN(price) || !category || !imageUrl) {
+        statusMessage.textContent = "❌ Please fill all fields correctly!";
+        statusMessage.className = "text-red-600 text-center text-sm";
         return;
       }
 
@@ -114,13 +115,16 @@
           imageUrl,
           timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        statusMessage.textContent = "Item added successfully!";
+
+        statusMessage.textContent = "✅ Item added successfully!";
+        statusMessage.className = "text-green-600 text-center text-sm";
         document.getElementById('addItemForm').reset();
       } catch (error) {
         console.error("Error adding item:", error);
-        statusMessage.textContent = "Error adding item!";
+        statusMessage.textContent = "❌ Error adding item!";
+        statusMessage.className = "text-red-600 text-center text-sm";
       }
     });
   </script>
 </body>
-        </html>
+            </html>
