@@ -95,4 +95,4 @@ if (container) {
         console.error(`❌ Error loading ${category}:`, err);
       });
   });
-          }
+}
