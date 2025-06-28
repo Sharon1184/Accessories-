@@ -1,6 +1,8 @@
-// Firebase Config
+// =====================
+// Firebase Configuration
+// =====================
 const firebaseConfig = {
-  apiKey: "AIzaSyD13EXAMPLE", // Replace with your actual key
+  apiKey: "AIzaSyAHhmbgDA_D13LcnEWgtr5Unu7uihBpGPE", // ✅ Your actual key
   authDomain: "food-ae7ff.firebaseapp.com",
   projectId: "food-ae7ff",
   storageBucket: "food-ae7ff.appspot.com",
@@ -17,6 +19,7 @@ const db = firebase.firestore();
 // =======================
 
 const addForm = document.getElementById("addItemForm");
+
 if (addForm) {
   addForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -28,9 +31,9 @@ if (addForm) {
     const imageUrl = addForm.imageUrl.value.trim();
     const statusMessage = document.getElementById("statusMessage");
 
-    if (!name || !price || !category || !imageUrl) {
+    if (!name || isNaN(price) || !category || !imageUrl) {
       statusMessage.textContent = "❌ Please fill all fields properly!";
-      statusMessage.classList.add("text-red-600");
+      statusMessage.className = "text-red-600 text-center text-sm";
       return;
     }
 
@@ -40,17 +43,17 @@ if (addForm) {
         description,
         price,
         category,
-        imageUrl
+        imageUrl,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
 
       statusMessage.textContent = "✅ Item added successfully!";
-      statusMessage.classList.remove("text-red-600");
-      statusMessage.classList.add("text-green-600");
+      statusMessage.className = "text-green-600 text-center text-sm";
       addForm.reset();
     } catch (error) {
       console.error("Error adding item:", error);
       statusMessage.textContent = "❌ Failed to add item.";
-      statusMessage.classList.add("text-red-600");
+      statusMessage.className = "text-red-600 text-center text-sm";
     }
   });
 }
@@ -66,12 +69,13 @@ if (container) {
   categories.forEach(category => {
     db.collection("products")
       .where("category", "==", category)
+      .orderBy("timestamp", "desc")
       .get()
       .then(snapshot => {
         if (!snapshot.empty) {
           console.log(`✅ Showing products for: ${category}`);
           let html = `<h2 class='text-xl font-bold mt-8 mb-2'>${category}</h2>
-          <div class='flex space-x-4 overflow-x-auto pb-4'>`;
+            <div class='flex space-x-4 overflow-x-auto pb-4'>`;
 
           snapshot.forEach(doc => {
             const item = doc.data();
@@ -95,4 +99,4 @@ if (container) {
         console.error(`❌ Error loading ${category}:`, err);
       });
   });
-    }
+                  }
