@@ -4,28 +4,117 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Product Details</title>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="product.js" defer></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-gray-50">
-  <div class="max-w-4xl mx-auto p-6">
-    <button onclick="history.back()" class="text-blue-600 mb-4">← Back</button>
+<body class="bg-gray-100 text-gray-800">
 
-    <!-- Product Detail -->
-    <div id="productDetail" class="bg-white p-6 rounded shadow mb-8">
-      <img id="productImage" class="w-full h-64 object-cover rounded mb-4" />
-      <h1 id="productName" class="text-2xl font-bold mb-2"></h1>
-      <p id="productDescription" class="text-gray-700 mb-2"></p>
-      <div id="productPrice" class="text-red-500 font-bold text-xl"></div>
-    </div>
+  <!-- Main Content -->
+  <div class="max-w-3xl mx-auto p-4">
+    <button onclick="history.back()" class="mb-4 text-blue-600 hover:underline">&larr; Back</button>
 
-    <!-- Related Products -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Related Products</h2>
-      <div id="relatedProducts" class="flex space-x-4 overflow-x-auto"></div>
+    <div id="productContainer" class="bg-white p-6 rounded shadow">
+      <p id="loading" class="text-center">Loading product details...</p>
     </div>
   </div>
+
+  <!-- Firebase & Script -->
+  <script>
+    // ========================
+    // Firebase Config
+    // ========================
+    const firebaseConfig = {
+      apiKey: "AIzaSyD13EXAMPLE", // Replace with actual key
+      authDomain: "food-ae7ff.firebaseapp.com",
+      projectId: "food-ae7ff",
+      storageBucket: "food-ae7ff.appspot.com",
+      messagingSenderId: "256095054979",
+      appId: "1:256095054979:web:22de2c16f9acb15f65a08f"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ========================
+    // Get Product ID from URL
+    // ========================
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+
+    const container = document.getElementById("productContainer");
+    const loading = document.getElementById("loading");
+
+    if (productId) {
+      db.collection("products").doc(productId).get().then(doc => {
+        if (doc.exists) {
+          const product = doc.data();
+          loading.remove();
+
+          container.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-6">
+              <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-64 object-cover rounded" />
+              <div>
+                <h1 class="text-2xl font-bold mb-2">${product.name}</h1>
+                <p class="text-gray-600 mb-4">${product.description}</p>
+                <div class="text-red-500 font-bold text-xl mb-4">Ksh ${product.price}</div>
+                <button 
+                  id="addToCartBtn"
+                  class="bg-blue-600 text-white px-4 py-2 rounded"
+                  data-id="${doc.id}"
+                  data-name="${product.name}"
+                  data-price="${product.price}"
+                  data-image="${product.imageUrl}"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          `;
+
+          // Add to Cart Logic
+          setTimeout(() => {
+            const btn = document.getElementById("addToCartBtn");
+            btn.addEventListener("click", () => {
+              const product = {
+                id: btn.dataset.id,
+                name: btn.dataset.name,
+                price: parseFloat(btn.dataset.price),
+                image: btn.dataset.image,
+                quantity: 1
+              };
+              addToCart(product);
+            });
+          }, 0);
+
+        } else {
+          loading.innerHTML = "❌ Product not found.";
+        }
+      }).catch(error => {
+        loading.innerHTML = "⚠️ Error loading product.";
+        console.error("Error fetching product:", error);
+      });
+    } else {
+      loading.innerHTML = "❌ No product ID provided.";
+    }
+
+    // ========================
+    // Add to Cart
+    // ========================
+    function addToCart(product) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const index = cart.findIndex(item => item.id === product.id);
+
+      if (index !== -1) {
+        cart[index].quantity += 1;
+      } else {
+        cart.push(product);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`🛒 ${product.name} added to cart!`);
+    }
+  </script>
+
 </body>
-</html>
+  </html>
