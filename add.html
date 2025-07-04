@@ -44,7 +44,7 @@
 
   <!-- Main Content -->
   <main class="pt-24 px-4 max-w-6xl mx-auto space-y-10">
-    
+
     <!-- ADD ITEM -->
     <section class="bg-white p-6 rounded shadow">
       <h2 class="text-xl font-bold text-primary mb-4">➕ Add New Item</h2>
@@ -92,7 +92,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Add item
+    // Add Item
     document.getElementById('addItemForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -121,7 +121,7 @@
       }
     });
 
-    // View + Search + Edit
+    // View + Search + Edit + Delete
     const viewBtn = document.getElementById("viewItemsBtn");
     const productList = document.getElementById("productList");
     const searchInput = document.getElementById("searchInput");
@@ -153,6 +153,7 @@
       products.forEach(product => {
         const div = document.createElement("div");
         div.className = "bg-gray-50 p-4 rounded shadow";
+
         div.innerHTML = `
           <div class="md:flex gap-4">
             <img src="${product.imageUrl}" alt="${product.name}" class="w-full md:w-48 h-40 object-cover rounded mb-4 md:mb-0" />
@@ -162,16 +163,21 @@
               <input type="number" class="w-full border p-2 rounded" value="${product.price}" data-id="${product.id}" data-field="price" />
               <input type="text" class="w-full border p-2 rounded" value="${product.category}" data-id="${product.id}" data-field="category" />
               <input type="url" class="w-full border p-2 rounded" value="${product.imageUrl}" data-id="${product.id}" data-field="imageUrl" />
-              <button class="saveBtn bg-primary text-white px-4 py-2 rounded hover:bg-green-700 mt-2" data-id="${product.id}">Save</button>
+
+              <div class="flex gap-2 mt-2">
+                <button class="saveBtn bg-primary text-white px-4 py-2 rounded hover:bg-green-700" data-id="${product.id}">Save</button>
+                <button class="deleteBtn bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" data-id="${product.id}">Delete</button>
+              </div>
             </div>
           </div>
         `;
+
         productList.appendChild(div);
       });
 
-      document.querySelectorAll(".saveBtn").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          const id = btn.dataset.id;
+      document.querySelectorAll(".saveBtn").forEach(button => {
+        button.onclick = async () => {
+          const id = button.dataset.id;
           const inputs = document.querySelectorAll(`[data-id="${id}"]`);
           const updates = {};
           inputs.forEach(input => {
@@ -181,13 +187,29 @@
           try {
             await db.collection("products").doc(id).update(updates);
             alert("✅ Product updated!");
-          } catch (error) {
-            console.error(error);
+          } catch (err) {
+            console.error(err);
             alert("❌ Failed to update.");
           }
-        });
+        };
+      });
+
+      document.querySelectorAll(".deleteBtn").forEach(button => {
+        button.onclick = async () => {
+          const id = button.dataset.id;
+          if (confirm("Are you sure you want to delete this product?")) {
+            try {
+              await db.collection("products").doc(id).delete();
+              alert("🗑️ Product deleted!");
+              fetchProducts(); // refresh list
+            } catch (err) {
+              console.error(err);
+              alert("❌ Failed to delete.");
+            }
+          }
+        };
       });
     }
   </script>
 </body>
-    </html>
+</html>
