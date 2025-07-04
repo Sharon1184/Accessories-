@@ -15,77 +15,89 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // =======================
-// DISPLAY ITEMS BY CATEGORY
+// DISPLAY ALL PRODUCTS RANDOMLY
 // =======================
-
-const categories = ["Phones", "Laptops", "Clothing", "Beauty"];
 const container = document.getElementById("categoriesContainer");
 
+function shuffle(array) {
+  // Fisher-Yates shuffle
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 if (container) {
-  categories.forEach(category => {
-    db.collection("products")
-      .where("category", "==", category)
-      .get()
-      .then(snapshot => {
-        if (!snapshot.empty) {
-          let html = `<h2 class='text-xl font-bold mt-8 mb-2'>${category}</h2>
-          <div class='flex space-x-4 overflow-x-auto pb-4'>`;
+  db.collection("products")
+    .get()
+    .then(snapshot => {
+      if (!snapshot.empty) {
+        let products = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          products.push({ id: doc.id, ...data });
+        });
 
-          snapshot.forEach(doc => {
-            const item = doc.data();
-            const id = doc.id;
+        // Shuffle for randomness
+        products = shuffle(products);
 
-            html += `
-              <div class='min-w-[200px] bg-white shadow p-2 rounded'>
-                <a href="product.html?id=${id}">
-                  <img src="${item.imageUrl}" class="w-full h-32 object-cover rounded" alt="${item.name}" />
-                </a>
-                <h3 class="font-semibold mt-2">${item.name}</h3>
-                <p class="text-sm text-gray-600">${item.description}</p>
-                <div class="text-red-500 font-bold mt-1">Ksh ${item.price}</div>
-                <button 
-                  class="addToCart bg-blue-600 text-white px-2 py-1 mt-2 rounded w-full"
-                  data-id="${id}"
-                  data-name="${item.name}"
-                  data-price="${item.price}"
-                  data-image="${item.imageUrl}">
-                  Add to Cart
-                </button>
-              </div>`;
-          });
+        let html = `<div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
 
-          html += `</div>`;
-          container.innerHTML += html;
+        products.forEach(item => {
+          html += `
+            <div class="bg-white shadow rounded p-4">
+              <a href="product.html?id=${item.id}">
+                <img src="${item.imageUrl}" class="w-full h-40 object-cover rounded" alt="${item.name}" />
+              </a>
+              <h3 class="font-semibold mt-2 text-lg">${item.name}</h3>
+              <p class="text-sm text-gray-600">${item.description || ''}</p>
+              <div class="text-green-600 font-bold mt-1">Ksh ${item.price}</div>
+              <button 
+                class="addToCart bg-green-600 text-white px-3 py-1 mt-2 rounded w-full hover:bg-green-700"
+                data-id="${item.id}"
+                data-name="${item.name}"
+                data-price="${item.price}"
+                data-image="${item.imageUrl}">
+                Add to Cart
+              </button>
+            </div>`;
+        });
 
-          // Attach addToCart logic
-          setTimeout(() => {
-            const cartButtons = document.querySelectorAll('.addToCart');
-            cartButtons.forEach(button => {
-              button.addEventListener('click', () => {
-                const product = {
-                  id: button.dataset.id,
-                  name: button.dataset.name,
-                  price: parseFloat(button.dataset.price),
-                  image: button.dataset.image,
-                  quantity: 1
-                };
-                addToCart(product);
-              });
-            });
-          }, 0);
-        } else {
-          console.log(`ℹ️ No items found in category: ${category}`);
-        }
-      })
-      .catch(err => {
-        console.error(`❌ Error loading ${category}:`, err);
-      });
-  });
+        html += `</div>`;
+        container.innerHTML = html;
+
+        // Attach Add to Cart events
+        attachAddToCartEvents();
+      } else {
+        container.innerHTML = `<p class="text-center text-gray-500">No products available.</p>`;
+      }
+    })
+    .catch(err => {
+      console.error("❌ Error fetching products:", err);
+      container.innerHTML = `<p class="text-red-500 text-center">Failed to load products.</p>`;
+    });
 }
 
 // =======================
 // ADD TO CART FUNCTION
 // =======================
+function attachAddToCartEvents() {
+  const cartButtons = document.querySelectorAll('.addToCart');
+  cartButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const product = {
+        id: button.dataset.id,
+        name: button.dataset.name,
+        price: parseFloat(button.dataset.price),
+        image: button.dataset.image,
+        quantity: 1
+      };
+      addToCart(product);
+    });
+  });
+}
+
 function addToCart(product) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -98,4 +110,4 @@ function addToCart(product) {
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert(`🛒 ${product.name} added to cart!`);
-}
+    }
