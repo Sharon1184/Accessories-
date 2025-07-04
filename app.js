@@ -15,89 +15,85 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // =======================
-// DISPLAY ALL PRODUCTS RANDOMLY
+// DISPLAY ALL ITEMS RANDOMLY
 // =======================
 const container = document.getElementById("categoriesContainer");
 
-function shuffle(array) {
-  // Fisher-Yates shuffle
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 
-if (container) {
-  db.collection("products")
-    .get()
-    .then(snapshot => {
-      if (!snapshot.empty) {
-        let products = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          products.push({ id: doc.id, ...data });
-        });
+db.collection("products")
+  .get()
+  .then(snapshot => {
+    const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const shuffled = shuffleArray(items);
+    displayItems(shuffled);
+  })
+  .catch(err => console.error("❌ Error fetching products:", err));
 
-        // Shuffle for randomness
-        products = shuffle(products);
+function displayItems(products) {
+  if (products.length === 0) {
+    container.innerHTML = `<p class="text-gray-600 text-center">No products found.</p>`;
+    return;
+  }
 
-        let html = `<div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
+  // Grid wrapper
+  container.innerHTML = `
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Featured Products</h2>
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="productGrid"></div>
+  `;
 
-        products.forEach(item => {
-          html += `
-            <div class="bg-white shadow rounded p-4">
-              <a href="product.html?id=${item.id}">
-                <img src="${item.imageUrl}" class="w-full h-40 object-cover rounded" alt="${item.name}" />
-              </a>
-              <h3 class="font-semibold mt-2 text-lg">${item.name}</h3>
-              <p class="text-sm text-gray-600">${item.description || ''}</p>
-              <div class="text-green-600 font-bold mt-1">Ksh ${item.price}</div>
-              <button 
-                class="addToCart bg-green-600 text-white px-3 py-1 mt-2 rounded w-full hover:bg-green-700"
-                data-id="${item.id}"
-                data-name="${item.name}"
-                data-price="${item.price}"
-                data-image="${item.imageUrl}">
-                Add to Cart
-              </button>
-            </div>`;
-        });
+  const grid = document.getElementById("productGrid");
 
-        html += `</div>`;
-        container.innerHTML = html;
+  products.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "bg-white rounded-2xl shadow hover:shadow-lg overflow-hidden transition-all duration-300 border";
 
-        // Attach Add to Cart events
-        attachAddToCartEvents();
-      } else {
-        container.innerHTML = `<p class="text-center text-gray-500">No products available.</p>`;
-      }
-    })
-    .catch(err => {
-      console.error("❌ Error fetching products:", err);
-      container.innerHTML = `<p class="text-red-500 text-center">Failed to load products.</p>`;
+    card.innerHTML = `
+      <a href="product.html?id=${item.id}">
+        <img src="${item.imageUrl}" alt="${item.name}" class="w-full h-52 object-cover hover:scale-105 transition duration-300" />
+      </a>
+      <div class="p-4">
+        <h3 class="text-lg font-semibold text-gray-800">${item.name}</h3>
+        <p class="text-sm text-gray-500 mb-2">${item.description || ""}</p>
+        <div class="flex items-center justify-between">
+          <span class="text-green-600 font-bold">Ksh ${item.price}</span>
+          <button 
+            class="addToCart bg-primary hover:bg-red-600 text-white text-xs font-medium px-4 py-1.5 rounded-full transition"
+            data-id="${item.id}"
+            data-name="${item.name}"
+            data-price="${item.price}"
+            data-image="${item.imageUrl}">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  // Attach cart logic
+  setTimeout(() => {
+    document.querySelectorAll(".addToCart").forEach(button => {
+      button.addEventListener("click", () => {
+        const product = {
+          id: button.dataset.id,
+          name: button.dataset.name,
+          price: parseFloat(button.dataset.price),
+          image: button.dataset.image,
+          quantity: 1
+        };
+        addToCart(product);
+      });
     });
+  }, 100);
 }
 
 // =======================
 // ADD TO CART FUNCTION
 // =======================
-function attachAddToCartEvents() {
-  const cartButtons = document.querySelectorAll('.addToCart');
-  cartButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const product = {
-        id: button.dataset.id,
-        name: button.dataset.name,
-        price: parseFloat(button.dataset.price),
-        image: button.dataset.image,
-        quantity: 1
-      };
-      addToCart(product);
-    });
-  });
-}
-
 function addToCart(product) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -110,4 +106,4 @@ function addToCart(product) {
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert(`🛒 ${product.name} added to cart!`);
-    }
+                              }
