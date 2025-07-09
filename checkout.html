@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConceptDash - Checkout</title>
 
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#e63946'
+          },
+          borderRadius: {
+            button: '8px'
+          },
+          fontFamily: {
+            pacifico: ['Pacifico', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
+
+  <!-- Firebase SDK (optional if using Firebase later) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
+      <nav class="flex space-x-6 text-sm items-center">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
+        <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
+        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Checkout Content -->
+  <main class="pt-24 px-4 max-w-4xl mx-auto">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">🧾 Checkout</h1>
+
+    <!-- Payment Instructions -->
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6 rounded">
+      <p class="text-gray-800 font-medium">📢 Please make payment before confirming order:</p>
+
+      <div class="mt-3 flex items-center justify-between bg-white border rounded p-2">
+        <div>
+          <p class="text-sm text-gray-700"><strong>Paybill:</strong> <span id="paybillText" class="font-bold text-gray-900">542542</span></p>
+        </div>
+        <button onclick="copyText('paybillText')" class="text-primary text-sm hover:underline">Copy</button>
+      </div>
+
+      <div class="mt-2 flex items-center justify-between bg-white border rounded p-2">
+        <div>
+          <p class="text-sm text-gray-700"><strong>Account No.:</strong> <span id="accText" class="font-bold text-gray-900">01903722976150</span></p>
+        </div>
+        <button onclick="copyText('accText')" class="text-primary text-sm hover:underline">Copy</button>
+      </div>
+
+      <p class="mt-2 text-xs text-gray-600">Use your phone number or name as reference.</p>
+      <p id="copyMsg" class="text-green-600 text-sm mt-1 hidden">✔️ Copied!</p>
+    </div>
+
+    <!-- Delivery Form -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-bold mb-4 text-gray-700">Delivery Details</h2>
+      <form id="checkoutForm" class="grid gap-4">
+        <input type="text" name="fullName" required placeholder="Full Name" class="border rounded p-2 w-full" />
+        <input type="text" name="phone" required placeholder="Phone Number" class="border rounded p-2 w-full" />
+        <input type="text" name="location" required placeholder="Delivery Location" class="border rounded p-2 w-full" />
+        <textarea name="notes" placeholder="Additional Notes (optional)" class="border rounded p-2 w-full"></textarea>
+
+        <label class="flex items-center space-x-2 mt-4">
+          <input type="checkbox" id="paidCheck" required class="w-4 h-4 text-primary border-gray-300 rounded">
+          <span class="text-sm text-gray-700">I confirm that I have paid via M-Pesa</span>
+        </label>
+      </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="bg-white mt-6 rounded-lg shadow p-6">
+      <h2 class="text-xl font-bold mb-4 text-gray-700">Order Summary</h2>
+      <div id="orderSummary" class="space-y-3"></div>
+      <div class="text-right mt-4 text-lg font-bold" id="orderTotal"></div>
+    </div>
+
+    <!-- Confirm Button -->
+    <div class="text-right mt-6">
+      <button type="submit" form="checkoutForm" class="bg-primary text-white px-6 py-2 rounded-button hover:bg-red-600">
+        Confirm Order
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+    &copy; 2025 ConceptDash. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Display cart items
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const orderSummary = document.getElementById('orderSummary');
+    const orderTotal = document.getElementById('orderTotal');
+    let total = 0;
+
+    if (cart.length === 0) {
+      orderSummary.innerHTML = "<p class='text-gray-600'>Your cart is empty.</p>";
+    } else {
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        orderSummary.innerHTML += `
+          <div class="flex justify-between items-center border-b pb-2">
+            <span>${item.name} (x${item.quantity})</span>
+            <span>KES ${subtotal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      orderTotal.textContent = `Total: KES ${total.toFixed(2)}`;
+    }
+
+    // Confirm order
+    document.getElementById('checkoutForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const paid = document.getElementById('paidCheck').checked;
+      if (!paid) {
+        alert("⚠️ Please confirm that you have made the payment.");
+        return;
+      }
+
+      const formData = new FormData(this);
+      const details = Object.fromEntries(formData.entries());
+
+      alert("✅ Order placed!\n\n" +
+        "Name: " + details.fullName +
+        "\nPhone: " + details.phone +
+        "\nLocation: " + details.location +
+        "\n\nTotal: KES " + total.toFixed(2) +
+        "\n\nPlease ensure you paid to Paybill: 542542, Acc: 01903722976150");
+
+      localStorage.removeItem('cart');
+      window.location.href = "index.html";
+    });
+
+    // Copy to clipboard
+    function copyText(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById("copyMsg");
+        msg.classList.remove("hidden");
+        setTimeout(() => msg.classList.add("hidden"), 2000);
+      });
+    }
+  </script>
+
+</body>
+        </html>
