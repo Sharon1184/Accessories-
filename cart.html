@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConceptDash - Cart</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#e63946'
+          },
+          borderRadius: {
+            button: '8px'
+          },
+          fontFamily: {
+            pacifico: ['Pacifico', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
+      <nav class="flex space-x-6 text-sm items-center">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
+        <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
+        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Cart Content -->
+  <main class="pt-24 px-4 max-w-4xl mx-auto">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">🛒 Your Cart</h1>
+
+    <div id="cart-container" class="space-y-4"></div>
+
+    <div id="cart-total" class="text-right text-lg font-bold mt-6"></div>
+
+    <div class="text-right mt-4">
+      <button id="checkout-btn" class="bg-primary text-white px-6 py-2 rounded-button hover:bg-red-600">Proceed to Checkout</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+    &copy; 2025 ConceptDash. All rights reserved.
+  </footer>
+
+  <!-- Cart Logic -->
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cart-container');
+    const totalDisplay = document.getElementById('cart-total');
+
+    let total = 0;
+
+    if (cart.length === 0) {
+      container.innerHTML = `<p class="text-gray-600">Your cart is empty.</p>`;
+      document.getElementById("checkout-btn").classList.add("hidden");
+    } else {
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        const itemHTML = `
+          <div class="bg-white rounded-lg shadow p-4 flex gap-4 items-center">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded">
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-gray-800">${item.name}</h2>
+              <p class="text-sm text-gray-600">KES ${item.price.toFixed(2)} x ${item.quantity}</p>
+              <p class="text-sm font-bold text-gray-800">Subtotal: KES ${(subtotal).toFixed(2)}</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += itemHTML;
+      });
+
+      totalDisplay.innerText = `Total: KES ${total.toFixed(2)}`;
+    }
+
+    document.getElementById("checkout-btn").addEventListener("click", () => {
+      alert("Checkout functionality coming soon!");
+    });
+  </script>
+
+</body>
+</html>
