@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ConceptDash - Product Details</title>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -24,63 +21,36 @@
       }
     }
   </script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-
-  <!-- Remix Icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-gray-50">
-
-  <!-- Header -->
   <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
       <nav class="flex space-x-6 text-sm items-center">
-        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
-        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
-        <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
-        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
-        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+        <a href="index.html" class="text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+        <a href="catgry.html" class="text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
+        <a href="add.html" class="text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
+        <a href="cart.html" class="text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+        <a href="auth.html" class="text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
       </nav>
     </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="pt-28 px-4 max-w-7xl mx-auto">
+  </header>  <main class="pt-28 px-4 max-w-7xl mx-auto">
     <button onclick="history.back()" class="text-primary hover:underline mb-4 block"><i class="ri-arrow-left-line"></i> Back</button>
-
-    <!-- Product Section -->
     <section id="productContainer" class="bg-white rounded-2xl shadow-lg p-6 md:flex gap-6 items-start">
       <p id="loading" class="text-center w-full py-10 text-lg text-gray-500">Loading product details...</p>
     </section>
-
-    <!-- Related -->
     <section id="relatedProducts" class="mt-10"></section>
-
-    <!-- You May Also Like -->
     <section id="youMayAlsoLikeContainer" class="mt-10"></section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+  </main>  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
     &copy; 2025 ConceptDash. All rights reserved.
-  </footer>
-
-  <!-- Product Script -->
-  <script>
+  </footer>  <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyD13EXAMPLE", // Replace
+      apiKey: "AIzaSyD13EXAMPLE",
       authDomain: "food-ae7ff.firebaseapp.com",
       projectId: "food-ae7ff",
       storageBucket: "food-ae7ff.appspot.com",
@@ -96,8 +66,6 @@
 
     const container = document.getElementById("productContainer");
     const loading = document.getElementById("loading");
-    const relatedContainer = document.getElementById("relatedProducts");
-    const youMayAlsoLikeContainer = document.getElementById("youMayAlsoLikeContainer");
 
     if (productId) {
       db.collection("products").doc(productId).get().then(doc => {
@@ -105,11 +73,22 @@
           const product = doc.data();
           loading.remove();
 
+          const specs = product.specs || {};
+          let specsHTML = "";
+          if (Object.keys(specs).length > 0) {
+            specsHTML += `<h3 class="font-bold text-lg mt-6 mb-2">Specifications</h3><ul class="list-disc list-inside text-gray-700">`;
+            for (let key in specs) {
+              specsHTML += `<li><strong>${key}:</strong> ${specs[key]}</li>`;
+            }
+            specsHTML += `</ul>`;
+          }
+
           container.innerHTML = `
             <img src="${product.imageUrl}" alt="${product.name}" class="w-full md:w-1/2 h-96 object-cover rounded-2xl border" />
             <div class="mt-6 md:mt-0 flex-1">
               <h1 class="text-3xl font-bold mb-2">${product.name}</h1>
               <p class="text-gray-600 mb-4">${product.description}</p>
+              ${specsHTML}
               <div class="text-2xl font-bold text-primary mb-6">Ksh ${product.price}</div>
               <button 
                 id="addToCartBtn"
@@ -124,7 +103,6 @@
             </div>
           `;
 
-          // Add to Cart
           setTimeout(() => {
             const btn = document.getElementById("addToCartBtn");
             btn.addEventListener("click", () => {
@@ -138,10 +116,6 @@
               addToCart(product);
             });
           }, 0);
-
-          showRelatedProducts(product.category, doc.id);
-          showYouMayAlsoLike(doc.id);
-
         } else {
           loading.innerHTML = "❌ Product not found.";
         }
@@ -161,66 +135,5 @@
       localStorage.setItem("cart", JSON.stringify(cart));
       alert(`🛒 ${product.name} added to cart!`);
     }
-
-    function showRelatedProducts(category, currentId) {
-      db.collection("products")
-        .where("category", "==", category)
-        .limit(6)
-        .get()
-        .then(snapshot => {
-          let html = `<h2 class="text-2xl font-bold mb-4">Related Products</h2>
-            <div class="flex gap-4 overflow-x-auto pb-4">`;
-
-          snapshot.forEach(doc => {
-            if (doc.id === currentId) return;
-            const item = doc.data();
-            html += `
-              <div class="min-w-[200px] bg-white border rounded-xl shadow p-3 hover:shadow-lg transition">
-                <a href="product.html?id=${doc.id}">
-                  <img src="${item.imageUrl}" class="w-full h-32 object-cover rounded-lg" />
-                  <h3 class="font-semibold mt-2">${item.name}</h3>
-                  <div class="text-primary font-bold">Ksh ${item.price}</div>
-                </a>
-              </div>`;
-          });
-
-          html += `</div>`;
-          relatedContainer.innerHTML = html;
-        });
-    }
-
-    function showYouMayAlsoLike(currentId) {
-      db.collection("products").limit(20).get().then(snapshot => {
-        const items = [];
-        snapshot.forEach(doc => {
-          if (doc.id !== currentId) items.push({ id: doc.id, ...doc.data() });
-        });
-
-        // Shuffle
-        for (let i = items.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [items[i], items[j]] = [items[j], items[i]];
-        }
-
-        const randomItems = items.slice(0, 6);
-        let html = `<h2 class="text-2xl font-bold mb-4">You May Also Like</h2>
-          <div class="flex gap-4 overflow-x-auto pb-4">`;
-
-        randomItems.forEach(item => {
-          html += `
-            <div class="min-w-[200px] bg-white border rounded-xl shadow p-3 hover:shadow-lg transition">
-              <a href="product.html?id=${item.id}">
-                <img src="${item.imageUrl}" class="w-full h-32 object-cover rounded-lg" />
-                <h3 class="font-semibold mt-2">${item.name}</h3>
-                <div class="text-primary font-bold">Ksh ${item.price}</div>
-              </a>
-            </div>`;
-        });
-
-        html += `</div>`;
-        youMayAlsoLikeContainer.innerHTML = html;
-      });
-    }
-  </script>
-</body>
-</html
+  </script></body>
+  </html>
