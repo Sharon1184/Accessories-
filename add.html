@@ -5,36 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Product - ConceptDash</title>
 
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Remix Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
+<body class="bg-gray-50 px-6 py-10">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-6 text-primary">➕ Add New Product</h1>
 
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold text-center text-primary mb-6">Add New Product</h1>
+    <form id="productForm" class="space-y-4">
+      <input type="text" id="name" placeholder="Product Name" required class="w-full border px-3 py-2 rounded" />
+      <textarea id="description" placeholder="Short Description" class="w-full border px-3 py-2 rounded"></textarea>
+      <input type="number" id="price" placeholder="Price (Ksh)" required class="w-full border px-3 py-2 rounded" />
+      <input type="text" id="category" placeholder="Category (e.g., Phones)" class="w-full border px-3 py-2 rounded" />
+      <textarea id="specifications" placeholder="Specifications (optional)" class="w-full border px-3 py-2 rounded"></textarea>
+      
+      <!-- Image Upload -->
+      <label class="block font-semibold">Main Image</label>
+      <input type="file" id="imageInput" accept="image/*" required class="w-full" />
 
-    <form id="addProductForm" class="space-y-4">
-      <input type="text" id="name" placeholder="Product Name" required class="w-full p-2 border rounded" />
-      <textarea id="description" placeholder="Description" required class="w-full p-2 border rounded"></textarea>
-      <input type="number" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
-      <input type="text" id="category" placeholder="Category (e.g., Phones)" required class="w-full p-2 border rounded" />
-      <input type="file" id="image" accept="image/*" required class="w-full" />
-
-      <div class="mt-6">
-        <h2 class="text-lg font-semibold mb-2">Specifications</h2>
-        <div id="specsContainer" class="space-y-2">
-          <!-- Dynamic specs will be added here -->
-        </div>
-        <button type="button" onclick="addSpecField()" class="text-blue-600 hover:underline text-sm mt-2">+ Add Specification</button>
-      </div>
-
-      <button type="submit" class="bg-primary text-white px-6 py-2 rounded mt-4 w-full">Submit</button>
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full">
+        📤 Upload Product
+      </button>
     </form>
+
+    <!-- Delete All Button -->
+    <button onclick="deleteAllProducts()" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg w-full">
+      🗑 Delete ALL Products
+    </button>
   </div>
 
   <script>
+    // ========================
+    // Firebase Config
+    // ========================
     const firebaseConfig = {
       apiKey: "AIzaSyD13EXAMPLE",
       authDomain: "food-ae7ff.firebaseapp.com",
@@ -48,60 +59,63 @@
     const db = firebase.firestore();
     const storage = firebase.storage();
 
-    function addSpecField() {
-      const container = document.getElementById("specsContainer");
-      const div = document.createElement("div");
-      div.className = "flex gap-2";
-      div.innerHTML = `
-        <input type="text" placeholder="Key (e.g. Battery)" class="flex-1 p-2 border rounded key-input" />
-        <input type="text" placeholder="Value (e.g. 4500mAh)" class="flex-1 p-2 border rounded value-input" />
-        <button type="button" onclick="this.parentElement.remove()" class="text-red-500">🗑</button>
-      `;
-      container.appendChild(div);
-    }
-
-    document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+    // ========================
+    // Upload Product
+    // ========================
+    document.getElementById("productForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      
+
       const name = document.getElementById("name").value.trim();
       const description = document.getElementById("description").value.trim();
       const price = parseFloat(document.getElementById("price").value);
       const category = document.getElementById("category").value.trim();
-      const imageFile = document.getElementById("image").files[0];
+      const specifications = document.getElementById("specifications").value.trim();
+      const imageFile = document.getElementById("imageInput").files[0];
 
       if (!imageFile) return alert("Please select an image.");
 
-      const imageRef = storage.ref(`products/${Date.now()}-${imageFile.name}`);
-      await imageRef.put(imageFile);
-      const imageUrl = await imageRef.getDownloadURL();
+      const imageRef = storage.ref("product-images/" + Date.now() + "_" + imageFile.name);
+      const snapshot = await imageRef.put(imageFile);
+      const imageUrl = await snapshot.ref.getDownloadURL();
 
-      const specKeys = document.querySelectorAll('.key-input');
-      const specValues = document.querySelectorAll('.value-input');
-      const specs = {};
-
-      specKeys.forEach((input, index) => {
-        const key = input.value.trim();
-        const value = specValues[index].value.trim();
-        if (key && value) {
-          specs[key] = value;
-        }
-      });
-
-      const product = {
+      await db.collection("products").add({
         name,
         description,
         price,
         category,
+        specifications,
         imageUrl,
-        specs,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
+      });
 
-      await db.collection("products").add(product);
-      alert("✅ Product added!");
-      e.target.reset();
-      document.getElementById("specsContainer").innerHTML = '';
+      alert("✅ Product uploaded!");
+      this.reset();
     });
+
+    // ========================
+    // Delete All Products
+    // ========================
+    function deleteAllProducts() {
+      if (!confirm("⚠️ Are you sure you want to delete ALL products? This cannot be undone.")) return;
+
+      db.collection("products").get().then(snapshot => {
+        const batch = db.batch();
+
+        snapshot.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+
+        return batch.commit();
+      })
+      .then(() => {
+        alert("✅ All products deleted successfully!");
+        location.reload();
+      })
+      .catch(err => {
+        console.error("❌ Error deleting products:", err);
+        alert("Something went wrong.");
+      });
+    }
   </script>
 </body>
 </html>
