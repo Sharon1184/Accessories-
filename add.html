@@ -8,44 +8,85 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Remix Icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 </head>
-<body class="bg-gray-50 px-6 py-10">
-  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-6 text-primary">➕ Add New Product</h1>
+<body class="bg-gray-100 px-4 py-8">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-6 text-primary">📦 Add Product</h1>
 
     <form id="productForm" class="space-y-4">
+      <!-- Basic Info -->
       <input type="text" id="name" placeholder="Product Name" required class="w-full border px-3 py-2 rounded" />
       <textarea id="description" placeholder="Short Description" class="w-full border px-3 py-2 rounded"></textarea>
       <input type="number" id="price" placeholder="Price (Ksh)" required class="w-full border px-3 py-2 rounded" />
-      <input type="text" id="category" placeholder="Category (e.g., Phones)" class="w-full border px-3 py-2 rounded" />
-      <textarea id="specifications" placeholder="Specifications (optional)" class="w-full border px-3 py-2 rounded"></textarea>
       
-      <!-- Image Upload -->
-      <label class="block font-semibold">Main Image</label>
-      <input type="file" id="imageInput" accept="image/*" required class="w-full" />
+      <!-- Category -->
+      <label class="block font-semibold">Category</label>
+      <select id="category" class="w-full border px-3 py-2 rounded" required>
+        <option value="">Select Category</option>
+        <option>Phones</option>
+        <option>Laptops</option>
+        <option>Clothing</option>
+        <option>Beauty</option>
+        <option>Accessories</option>
+        <option>Electronics</option>
+        <option>Appliances</option>
+        <option>Furniture</option>
+        <option>Books</option>
+        <option>Groceries</option>
+      </select>
 
+      <!-- Brand -->
+      <label class="block font-semibold">Brand</label>
+      <select id="brand" class="w-full border px-3 py-2 rounded">
+        <option value="">Select Brand</option>
+        <option>Apple</option>
+        <option>Samsung</option>
+        <option>Infinix</option>
+        <option>HP</option>
+        <option>Dell</option>
+        <option>Tecno</option>
+        <option>Lenovo</option>
+        <option>Sony</option>
+        <option>LG</option>
+        <option>Huawei</option>
+        <option>Nokia</option>
+        <option>Asus</option>
+        <option>Other</option>
+      </select>
+
+      <!-- Condition -->
+      <label class="block font-semibold">Condition</label>
+      <select id="condition" class="w-full border px-3 py-2 rounded">
+        <option>New</option>
+        <option>Used - Like New</option>
+        <option>Used - Good</option>
+        <option>Refurbished</option>
+      </select>
+
+      <!-- Main Image URL -->
+      <label class="block font-semibold">Main Image URL</label>
+      <input type="url" id="imageUrl" placeholder="https://..." required class="w-full border px-3 py-2 rounded" />
+
+      <!-- Extra Image URLs (comma-separated) -->
+      <label class="block font-semibold">Other Image URLs (comma-separated)</label>
+      <input type="text" id="extraImages" placeholder="https://img1.jpg, https://img2.jpg" class="w-full border px-3 py-2 rounded" />
+
+      <!-- Specs -->
+      <label class="block font-semibold">Specifications</label>
+      <textarea id="specifications" placeholder="Battery: 5000mAh, RAM: 8GB, Storage: 128GB" class="w-full border px-3 py-2 rounded"></textarea>
+
+      <!-- Upload Button -->
       <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full">
-        📤 Upload Product
+        Upload Product
       </button>
     </form>
-
-    <!-- Delete All Button -->
-    <button onclick="deleteAllProducts()" class="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg w-full">
-      🗑 Delete ALL Products
-    </button>
   </div>
 
   <script>
-    // ========================
     // Firebase Config
-    // ========================
     const firebaseConfig = {
       apiKey: "AIzaSyD13EXAMPLE",
       authDomain: "food-ae7ff.firebaseapp.com",
@@ -57,65 +98,48 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const storage = firebase.storage();
 
-    // ========================
-    // Upload Product
-    // ========================
-    document.getElementById("productForm").addEventListener("submit", async function(e) {
+    // Submit Product
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
       const description = document.getElementById("description").value.trim();
       const price = parseFloat(document.getElementById("price").value);
-      const category = document.getElementById("category").value.trim();
+      const category = document.getElementById("category").value;
+      const brand = document.getElementById("brand").value;
+      const condition = document.getElementById("condition").value;
+      const imageUrl = document.getElementById("imageUrl").value.trim();
+      const extraImagesRaw = document.getElementById("extraImages").value.trim();
       const specifications = document.getElementById("specifications").value.trim();
-      const imageFile = document.getElementById("imageInput").files[0];
 
-      if (!imageFile) return alert("Please select an image.");
+      const extraImages = extraImagesRaw
+        .split(',')
+        .map(url => url.trim())
+        .filter(url => url.length > 0);
 
-      const imageRef = storage.ref("product-images/" + Date.now() + "_" + imageFile.name);
-      const snapshot = await imageRef.put(imageFile);
-      const imageUrl = await snapshot.ref.getDownloadURL();
-
-      await db.collection("products").add({
+      const product = {
         name,
         description,
         price,
         category,
-        specifications,
+        brand,
+        condition,
         imageUrl,
+        extraImages,
+        specifications,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      };
 
-      alert("✅ Product uploaded!");
-      this.reset();
+      try {
+        await db.collection("products").add(product);
+        alert("✅ Product uploaded!");
+        document.getElementById("productForm").reset();
+      } catch (err) {
+        console.error("Upload failed", err);
+        alert("❌ Failed to upload product.");
+      }
     });
-
-    // ========================
-    // Delete All Products
-    // ========================
-    function deleteAllProducts() {
-      if (!confirm("⚠️ Are you sure you want to delete ALL products? This cannot be undone.")) return;
-
-      db.collection("products").get().then(snapshot => {
-        const batch = db.batch();
-
-        snapshot.forEach(doc => {
-          batch.delete(doc.ref);
-        });
-
-        return batch.commit();
-      })
-      .then(() => {
-        alert("✅ All products deleted successfully!");
-        location.reload();
-      })
-      .catch(err => {
-        console.error("❌ Error deleting products:", err);
-        alert("Something went wrong.");
-      });
-    }
   </script>
 </body>
-</html>
+  </html>
