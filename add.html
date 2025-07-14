@@ -3,95 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ConceptDash - Add Item (Admin Only)</title>
+  <title>Add Product - ConceptDash</title>
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#e63946'
-          },
-          borderRadius: {
-            button: '8px'
-          },
-          fontFamily: {
-            pacifico: ['Pacifico', 'cursive']
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 </head>
+<body class="bg-gray-100 min-h-screen p-4">
 
-<body class="bg-gray-50">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold text-center text-primary mb-6">Add New Product</h1>
 
-  <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
-      <nav class="flex space-x-6 text-sm items-center">
-        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
-        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
-        <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
-        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
-        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
-      </nav>
-    </div>
-  </header>
+    <form id="addProductForm" class="space-y-4">
+      <input type="text" id="name" placeholder="Product Name" required class="w-full p-2 border rounded" />
+      <textarea id="description" placeholder="Description" required class="w-full p-2 border rounded"></textarea>
+      <input type="number" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
+      <input type="text" id="category" placeholder="Category (e.g., Phones)" required class="w-full p-2 border rounded" />
+      <input type="file" id="image" accept="image/*" required class="w-full" />
 
-  <!-- Main Content -->
-  <main class="pt-24 px-4 max-w-3xl mx-auto">
-    <!-- Admin Password Section -->
-    <div id="authSection" class="bg-white p-6 rounded shadow text-center">
-      <h2 class="text-xl font-semibold mb-4">🔐 Admin Access Required</h2>
-      <input type="password" id="adminPass" placeholder="Enter admin password" class="border p-2 rounded w-full mb-4" />
-      <button onclick="checkPassword()" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-red-600">Enter</button>
-      <p id="errorMsg" class="text-red-600 text-sm mt-2 hidden">Incorrect password.</p>
-    </div>
+      <div class="mt-6">
+        <h2 class="text-lg font-semibold mb-2">Specifications</h2>
+        <div id="specsContainer" class="space-y-2">
+          <!-- Dynamic specs will be added here -->
+        </div>
+        <button type="button" onclick="addSpecField()" class="text-blue-600 hover:underline text-sm mt-2">+ Add Specification</button>
+      </div>
 
-    <!-- Add Item Form Section -->
-    <div id="addItemForm" class="hidden bg-white p-6 rounded shadow mt-8">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">📦 Add New Item</h2>
-      <form>
-        <input type="text" placeholder="Item Name" class="border p-2 rounded w-full mb-4" required />
-        <input type="number" placeholder="Price (KES)" class="border p-2 rounded w-full mb-4" required />
-        <input type="url" placeholder="Image URL" class="border p-2 rounded w-full mb-4" required />
-        <textarea placeholder="Description" class="border p-2 rounded w-full mb-4" rows="3"></textarea>
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-button hover:bg-green-700">Add Item</button>
-      </form>
-    </div>
-  </main>
+      <button type="submit" class="bg-primary text-white px-6 py-2 rounded mt-4 w-full">Submit</button>
+    </form>
+  </div>
 
-  <!-- Footer -->
-  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
-    &copy; 2025 ConceptDash. All rights reserved.
-  </footer>
-
-  <!-- Admin Password Check -->
   <script>
-    const CORRECT_PASSWORD = "conceptAdmin2025";
+    const firebaseConfig = {
+      apiKey: "AIzaSyD13EXAMPLE",
+      authDomain: "food-ae7ff.firebaseapp.com",
+      projectId: "food-ae7ff",
+      storageBucket: "food-ae7ff.appspot.com",
+      messagingSenderId: "256095054979",
+      appId: "1:256095054979:web:22de2c16f9acb15f65a08f"
+    };
 
-    function checkPassword() {
-      const input = document.getElementById("adminPass").value;
-      const error = document.getElementById("errorMsg");
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-      if (input === CORRECT_PASSWORD) {
-        document.getElementById("authSection").classList.add("hidden");
-        document.getElementById("addItemForm").classList.remove("hidden");
-      } else {
-        error.classList.remove("hidden");
-      }
+    function addSpecField() {
+      const container = document.getElementById("specsContainer");
+      const div = document.createElement("div");
+      div.className = "flex gap-2";
+      div.innerHTML = `
+        <input type="text" placeholder="Key (e.g. Battery)" class="flex-1 p-2 border rounded key-input" />
+        <input type="text" placeholder="Value (e.g. 4500mAh)" class="flex-1 p-2 border rounded value-input" />
+        <button type="button" onclick="this.parentElement.remove()" class="text-red-500">🗑</button>
+      `;
+      container.appendChild(div);
     }
-  </script>
 
+    document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById("name").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const category = document.getElementById("category").value.trim();
+      const imageFile = document.getElementById("image").files[0];
+
+      if (!imageFile) return alert("Please select an image.");
+
+      const imageRef = storage.ref(`products/${Date.now()}-${imageFile.name}`);
+      await imageRef.put(imageFile);
+      const imageUrl = await imageRef.getDownloadURL();
+
+      const specKeys = document.querySelectorAll('.key-input');
+      const specValues = document.querySelectorAll('.value-input');
+      const specs = {};
+
+      specKeys.forEach((input, index) => {
+        const key = input.value.trim();
+        const value = specValues[index].value.trim();
+        if (key && value) {
+          specs[key] = value;
+        }
+      });
+
+      const product = {
+        name,
+        description,
+        price,
+        category,
+        imageUrl,
+        specs,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      await db.collection("products").add(product);
+      alert("✅ Product added!");
+      e.target.reset();
+      document.getElementById("specsContainer").innerHTML = '';
+    });
+  </script>
 </body>
-  </html>
+</html>
