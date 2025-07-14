@@ -10,7 +10,6 @@ const firebaseConfig = {
   appId: "1:256095054979:web:22de2c16f9acb15f65a08f"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -23,8 +22,6 @@ if (container) {
   db.collection("products").get()
     .then(snapshot => {
       const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      // Shuffle products randomly
       const shuffled = products.sort(() => 0.5 - Math.random());
 
       let html = `
@@ -33,10 +30,12 @@ if (container) {
       `;
 
       shuffled.forEach(item => {
+        const image = Array.isArray(item.images) && item.images.length ? item.images[0] : item.imageUrl || "placeholder.jpg";
+
         html += `
           <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-0">
             <a href="product.html?id=${item.id}">
-              <img src="${item.imageUrl}" alt="${item.name}" 
+              <img src="${image}" alt="${item.name}" 
                    class="w-full h-72 object-contain bg-white rounded-t-xl p-2" />
             </a>
             <div class="p-4">
@@ -48,7 +47,7 @@ if (container) {
                 data-id="${item.id}"
                 data-name="${item.name}"
                 data-price="${item.price}"
-                data-image="${item.imageUrl}">
+                data-image="${image}">
                 Add to Cart
               </button>
             </div>
@@ -59,10 +58,9 @@ if (container) {
       html += `</div>`;
       container.innerHTML = html;
 
-      // Attach addToCart logic
+      // Attach Add to Cart
       setTimeout(() => {
-        const cartButtons = document.querySelectorAll('.addToCart');
-        cartButtons.forEach(button => {
+        document.querySelectorAll('.addToCart').forEach(button => {
           button.addEventListener('click', () => {
             const product = {
               id: button.dataset.id,
@@ -96,4 +94,4 @@ function addToCart(product) {
 
   localStorage.setItem("cart", JSON.stringify(cart));
   alert(`🛒 ${product.name} added to cart!`);
-        }
+              }
