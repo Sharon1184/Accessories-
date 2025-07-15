@@ -1,8 +1,11 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ConceptDash - Product Details</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -21,13 +24,21 @@
       }
     }
   </script>
+
+  <!-- Fonts and Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <!-- Your CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-gray-50">
+
+  <!-- Header -->
   <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
@@ -39,23 +50,35 @@
         <a href="auth.html" class="text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
       </nav>
     </div>
-  </header>  <main class="pt-28 px-4 max-w-7xl mx-auto">
+  </header>
+
+  <!-- Main -->
+  <main class="pt-28 px-4 max-w-7xl mx-auto">
     <button onclick="history.back()" class="text-primary hover:underline mb-4 block"><i class="ri-arrow-left-line"></i> Back</button>
     <section id="productContainer" class="bg-white rounded-2xl shadow-lg p-6 md:flex gap-6 items-start">
       <p id="loading" class="text-center w-full py-10 text-lg text-gray-500">Loading product details...</p>
     </section>
+
     <section id="relatedProducts" class="mt-10"></section>
     <section id="youMayAlsoLikeContainer" class="mt-10"></section>
-  </main>  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
     &copy; 2025 ConceptDash. All rights reserved.
-  </footer>  <script>
+  </footer>
+
+  <!-- App Script -->
+  <script>
+    // ✅ Your Updated Firebase Config
     const firebaseConfig = {
-      apiKey: "AIzaSyD13EXAMPLE",
-      authDomain: "food-ae7ff.firebaseapp.com",
-      projectId: "food-ae7ff",
-      storageBucket: "food-ae7ff.appspot.com",
-      messagingSenderId: "256095054979",
-      appId: "1:256095054979:web:22de2c16f9acb15f65a08f"
+      apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
+      authDomain: "concept-dash-e1b60.firebaseapp.com",
+      projectId: "concept-dash-e1b60",
+      storageBucket: "concept-dash-e1b60.appspot.com",
+      messagingSenderId: "442954536333",
+      appId: "1:442954536333:web:143a03ca359ba3219bd9c4",
+      measurementId: "G-RYXJVCDF9K"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -73,18 +96,17 @@
           const product = doc.data();
           loading.remove();
 
-          const specs = product.specs || {};
           let specsHTML = "";
-          if (Object.keys(specs).length > 0) {
+          if (product.specifications) {
             specsHTML += `<h3 class="font-bold text-lg mt-6 mb-2">Specifications</h3><ul class="list-disc list-inside text-gray-700">`;
-            for (let key in specs) {
-              specsHTML += `<li><strong>${key}:</strong> ${specs[key]}</li>`;
-            }
+            product.specifications.split(',').forEach(spec => {
+              specsHTML += `<li>${spec.trim()}</li>`;
+            });
             specsHTML += `</ul>`;
           }
 
           container.innerHTML = `
-            <img src="${product.imageUrl}" alt="${product.name}" class="w-full md:w-1/2 h-96 object-cover rounded-2xl border" />
+            <img src="${product.imageUrl}" alt="${product.name}" class="w-full md:w-1/2 h-96 object-contain rounded-2xl border" />
             <div class="mt-6 md:mt-0 flex-1">
               <h1 class="text-3xl font-bold mb-2">${product.name}</h1>
               <p class="text-gray-600 mb-4">${product.description}</p>
@@ -135,5 +157,6 @@
       localStorage.setItem("cart", JSON.stringify(cart));
       alert(`🛒 ${product.name} added to cart!`);
     }
-  </script></body>
-  </html>
+  </script>
+</body>
+</html>
