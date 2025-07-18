@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Products by Brand</title>
+  <title>Brand Products</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -29,31 +29,39 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const brand = urlParams.get("brand");
+
     document.getElementById("brand-title").textContent = brand + " Products";
 
     const productList = document.getElementById("product-list");
 
-    db.collection("products").where("brand", "==", brand).get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const card = document.createElement("div");
-        card.className = "bg-white rounded-lg shadow-md p-4";
+    db.collection("products")
+      .where("brand", "==", brand)
+      .get()
+      .then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          productList.innerHTML = `<p class="text-center text-gray-500 col-span-full">No products found for ${brand}</p>`;
+        } else {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-lg shadow-md p-4";
 
-        card.innerHTML = `
-          <img src="${data.imageUrls[0]}" alt="${data.name}" class="w-full h-48 object-cover rounded-md mb-4">
-          <h2 class="text-xl font-semibold">${data.name}</h2>
-          <p class="text-gray-600">${data.shortDescription}</p>
-          <p class="text-green-600 font-bold mt-2">KES ${data.price}</p>
-          <a href="product.html?id=${doc.id}" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
-        `;
+            card.innerHTML = `
+              <img src="${data.imageUrl || 'placeholder.jpg'}" alt="${data.name}" class="w-full h-48 object-cover rounded-md mb-4">
+              <h2 class="text-xl font-semibold">${data.name}</h2>
+              <p class="text-gray-600">${data.shortDescription || ''}</p>
+              <p class="text-green-600 font-bold mt-2">KES ${data.price}</p>
+              <a href="product.html?id=${doc.id}" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
+            `;
 
-        productList.appendChild(card);
+            productList.appendChild(card);
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching brand products:", err);
+        productList.innerHTML = `<p class="text-center text-red-600">Failed to load products.</p>`;
       });
-
-      if (querySnapshot.empty) {
-        productList.innerHTML = `<p class="text-center text-gray-500 col-span-full">No products found for ${brand}</p>`;
-      }
-    });
   </script>
 </body>
-  </html>
+</html>
