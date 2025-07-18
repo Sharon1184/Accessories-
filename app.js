@@ -43,7 +43,7 @@ if (container) {
       featuredProducts.forEach(product => {
         html += `
           <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-0">
-            <a href="food.html?name=${encodeURIComponent(product.name)}">
+            <a href="brand.html?name=${encodeURIComponent(product.name)}">
               <img src="${product.imageUrl || 'placeholder.jpg'}" 
                    alt="${product.name}" 
                    class="w-full h-72 object-contain bg-white rounded-t-xl p-2" />
