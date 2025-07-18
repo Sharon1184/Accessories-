@@ -106,4 +106,4 @@ function attachCartListeners() {
       addToCart(product);
     });
   });
-    }
+}
