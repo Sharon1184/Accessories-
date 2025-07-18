@@ -12,7 +12,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ======================= Render Unique Models on Homepage =======================
+// ======================= Render One Product Per Brand on Homepage =======================
 const container = document.getElementById("categoriesContainer");
 
 if (container) {
@@ -21,36 +21,36 @@ if (container) {
     .then(snapshot => {
       const allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      // Group by product name
-      const groupedByName = {};
+      // Group by brand name
+      const groupedByBrand = {};
       allProducts.forEach(item => {
-        const key = item.name?.trim().toLowerCase();
-        if (!groupedByName[key]) groupedByName[key] = [];
-        groupedByName[key].push(item);
+        const key = item.brand?.trim().toLowerCase();
+        if (!groupedByBrand[key]) groupedByBrand[key] = [];
+        groupedByBrand[key].push(item);
       });
 
-      // Select one random product from each group
-      const featuredProducts = Object.values(groupedByName).map(group => {
+      // Select one random product per brand
+      const featuredBrands = Object.values(groupedByBrand).map(group => {
         return group[Math.floor(Math.random() * group.length)];
       });
 
       // Build HTML
       let html = `
-        <h2 class="text-2xl font-bold text-primary mb-4">🛍 Featured Models</h2>
+        <h2 class="text-2xl font-bold text-primary mb-4">🛍 Popular Brands</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       `;
 
-      featuredProducts.forEach(product => {
+      featuredBrands.forEach(product => {
         html += `
           <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-0">
-            <a href="brand.html?name=${encodeURIComponent(product.name)}">
+            <a href="brand.html?brand=${encodeURIComponent(product.brand)}">
               <img src="${product.imageUrl || 'placeholder.jpg'}" 
-                   alt="${product.name}" 
+                   alt="${product.brand}" 
                    class="w-full h-72 object-contain bg-white rounded-t-xl p-2" />
             </a>
             <div class="p-4">
-              <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
-              <p class="text-sm text-gray-500">${product.description || 'No description available.'}</p>
+              <h3 class="text-lg font-semibold text-gray-800">${product.brand}</h3>
+              <p class="text-sm text-gray-500">${product.description || 'Explore all ' + product.brand + ' products.'}</p>
               <div class="mt-2 mb-3 text-green-600 font-bold">From Ksh ${product.price}</div>
               <button 
                 class="addToCart bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded-lg text-sm font-medium transition"
@@ -106,4 +106,4 @@ function attachCartListeners() {
       addToCart(product);
     });
   });
-          }
+    }
