@@ -51,7 +51,9 @@
       <!-- Brand -->
       <div>
         <label class="block font-semibold text-sm mb-1">Brand</label>
-        <select id="brand" class="w-full border border-gray-300 px-4 py-2 rounded-lg" required></select>
+        <select id="brand" required class="w-full border border-gray-300 px-4 py-2 rounded-lg">
+          <option disabled selected>Loading brands...</option>
+        </select>
       </div>
 
       <!-- Condition -->
@@ -100,7 +102,7 @@
     </div>
   </div>
 
-  <!-- Firebase Logic -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
   <script>
@@ -110,8 +112,7 @@
       projectId: "concept-dash-e1b60",
       storageBucket: "concept-dash-e1b60.appspot.com",
       messagingSenderId: "442954536333",
-      appId: "1:442954536333:web:143a03ca359ba3219bd9c4",
-      measurementId: "G-RYXJVCDF9K"
+      appId: "1:442954536333:web:143a03ca359ba3219bd9c4"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -128,7 +129,7 @@
       });
     }
 
-    // Submit product
+    // Add product
     document.getElementById("productForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -158,23 +159,39 @@
       }
     });
 
-    // Brand modal logic
+    // Brand Modal Logic
     const brandModal = document.getElementById("brandModal");
-    document.getElementById("manageBrandsBtn").onclick = () => brandModal.classList.remove("hidden");
-    document.getElementById("closeBrandModal").onclick = () => brandModal.classList.add("hidden");
+    const newBrandInput = document.getElementById("newBrandInput");
+    const saveBrandBtn = document.getElementById("saveBrandBtn");
 
-    document.getElementById("saveBrandBtn").onclick = async () => {
-      const brandName = document.getElementById("newBrandInput").value.trim();
-      if (!brandName) return alert("Brand name required!");
+    document.getElementById("manageBrandsBtn").onclick = () => {
+      newBrandInput.value = "";
+      brandModal.classList.remove("hidden");
+      newBrandInput.focus();
+    };
 
-      await db.collection("brands").add({ name: brandName });
-      document.getElementById("newBrandInput").value = "";
+    document.getElementById("closeBrandModal").onclick = () => {
       brandModal.classList.add("hidden");
-      loadBrands();
-      alert(`✅ Brand "${brandName}" added!`);
+    };
+
+    saveBrandBtn.onclick = async () => {
+      const brandName = newBrandInput.value.trim();
+      if (!brandName) return alert("⚠️ Please enter a brand name.");
+
+      saveBrandBtn.disabled = true;
+      try {
+        await db.collection("brands").add({ name: brandName });
+        brandModal.classList.add("hidden");
+        await loadBrands();
+        alert(`✅ Brand "${brandName}" added!`);
+      } catch (err) {
+        console.error(err);
+        alert("❌ Failed to save brand.");
+      }
+      saveBrandBtn.disabled = false;
     };
 
     loadBrands();
   </script>
 </body>
-  </html>
+                                                                        </html>
