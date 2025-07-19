@@ -1,197 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Product</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Accessories Site</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      margin-top: 5px;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .product-card, .brand-item {
+      background-color: white;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .flex {
+      display: flex;
+      gap: 20px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen px-4 py-8">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-md">
-    
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-indigo-700">📦 Add New Product</h1>
-      <div class="space-x-2">
-        <button id="manageBrandsBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm">
-          ➕ Brand
-        </button>
-        <a href="edit-products.html" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg text-sm">
-          ✏️ Edit Products
-        </a>
-      </div>
-    </div>
+<body>
+  <h1>Admin Dashboard</h1>  <h2>Add Brand</h2>
+  <label>Brand Name</label>
+  <input type="text" id="brandName">
+  <button onclick="addBrand()">Add Brand</button>  <h2>Add Product</h2>
+  <label>Product Name</label>
+  <input type="text" id="productName"><label>Price</label> <input type="number" id="productPrice">
 
-    <!-- Product Form -->
-    <form id="productForm" class="space-y-4">
-      <input type="text" id="name" placeholder="Product Name" required class="w-full border border-gray-300 px-4 py-2 rounded-lg" />
-      
-      <textarea id="description" placeholder="Short Description" class="w-full border border-gray-300 px-4 py-2 rounded-lg resize-none" rows="3"></textarea>
-      
-      <input type="number" id="price" placeholder="Price (Ksh)" required class="w-full border border-gray-300 px-4 py-2 rounded-lg" />
+<label>Description</label> <input type="text" id="productDesc">
 
-      <!-- Category -->
-      <div>
-        <label class="block font-semibold text-sm mb-1">Category</label>
-        <select id="category" required class="w-full border border-gray-300 px-4 py-2 rounded-lg">
-          <option value="">Select Category</option>
-          <option>Phones</option>
-          <option>Laptops</option>
-          <option>Clothing</option>
-          <option>Beauty</option>
-          <option>Accessories</option>
-          <option>Electronics</option>
-          <option>Appliances</option>
-          <option>Furniture</option>
-          <option>Books</option>
-          <option>Groceries</option>
-        </select>
-      </div>
+<label>Brand</label> <select id="brandSelect"></select>
 
-      <!-- Brand -->
-      <div>
-        <label class="block font-semibold text-sm mb-1">Brand</label>
-        <select id="brand" required class="w-full border border-gray-300 px-4 py-2 rounded-lg">
-          <option disabled selected>Loading brands...</option>
-        </select>
-      </div>
+<label>Image</label> <input type="file" id="productImage"> <button onclick="addProduct()">Add Product</button>
 
-      <!-- Condition -->
-      <div>
-        <label class="block font-semibold text-sm mb-1">Condition</label>
-        <select id="condition" class="w-full border border-gray-300 px-4 py-2 rounded-lg">
-          <option>New</option>
-          <option>Used - Like New</option>
-          <option>Used - Good</option>
-          <option>Refurbished</option>
-        </select>
-      </div>
-
-      <!-- Images -->
-      <div>
-        <label class="block font-semibold text-sm mb-1">Main Image URL</label>
-        <input type="url" id="imageUrl" placeholder="https://..." required class="w-full border border-gray-300 px-4 py-2 rounded-lg" />
-      </div>
-
-      <div>
-        <label class="block font-semibold text-sm mb-1">Other Image URLs (comma-separated)</label>
-        <input type="text" id="extraImages" placeholder="https://img1.jpg, https://img2.jpg" class="w-full border border-gray-300 px-4 py-2 rounded-lg" />
-      </div>
-
-      <!-- Specs -->
-      <div>
-        <label class="block font-semibold text-sm mb-1">Specifications</label>
-        <textarea id="specifications" placeholder="Battery: 5000mAh, RAM: 8GB, Storage: 128GB" class="w-full border border-gray-300 px-4 py-2 rounded-lg resize-none" rows="3"></textarea>
-      </div>
-
-      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full font-medium">
-        ✅ Upload Product
-      </button>
-    </form>
-  </div>
-
-  <!-- Brand Modal -->
-  <div id="brandModal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg w-full max-w-sm shadow-lg">
-      <h2 class="text-xl font-bold mb-4">➕ Add Brand</h2>
-      <input type="text" id="newBrandInput" placeholder="Brand name e.g. Itel" class="w-full border px-3 py-2 rounded mb-4" />
-      <div class="flex justify-end space-x-2">
-        <button id="closeBrandModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
-        <button id="saveBrandBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Save</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
-  <script>
+  <h2>All Products</h2>
+  <div id="productList"></div>  <!-- Firebase SDK -->  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"></script>  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
       authDomain: "concept-dash-e1b60.firebaseapp.com",
       projectId: "concept-dash-e1b60",
       storageBucket: "concept-dash-e1b60.appspot.com",
-      messagingSenderId: "442954536333",
-      appId: "1:442954536333:web:143a03ca359ba3219bd9c4"
+      messagingSenderId: "370747076258",
+      appId: "1:370747076258:web:fe2debe01d8a36799a4f3a"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    const brandSelect = document.getElementById("brand");
+    const brandSelect = document.getElementById("brandSelect");
+    const productList = document.getElementById("productList");
 
     async function loadBrands() {
-      const snapshot = await db.collection("brands").orderBy("name").get();
-      brandSelect.innerHTML = '<option value="">Select Brand</option>';
+      brandSelect.innerHTML = '';
+      const snapshot = await db.collection("brands").get();
       snapshot.forEach(doc => {
-        const brand = doc.data().name;
-        brandSelect.innerHTML += `<option>${brand}</option>`;
+        const option = document.createElement("option");
+        option.value = doc.id;
+        option.textContent = doc.data().name;
+        brandSelect.appendChild(option);
       });
     }
 
-    // Add product
-    document.getElementById("productForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    async function addBrand() {
+      const name = document.getElementById("brandName").value;
+      if (!name.trim()) return;
+      await db.collection("brands").add({ name });
+      document.getElementById("brandName").value = '';
+      loadBrands();
+    }
 
-      const product = {
-        name: document.getElementById("name").value.trim(),
-        description: document.getElementById("description").value.trim(),
-        price: parseFloat(document.getElementById("price").value),
-        category: document.getElementById("category").value,
-        brand: document.getElementById("brand").value,
-        condition: document.getElementById("condition").value,
-        imageUrl: document.getElementById("imageUrl").value.trim(),
-        extraImages: document.getElementById("extraImages").value
-          .split(',')
-          .map(x => x.trim())
-          .filter(Boolean),
-        specifications: document.getElementById("specifications").value.trim(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
+    async function addProduct() {
+      const name = document.getElementById("productName").value;
+      const price = parseFloat(document.getElementById("productPrice").value);
+      const desc = document.getElementById("productDesc").value;
+      const brandId = document.getElementById("brandSelect").value;
+      const file = document.getElementById("productImage").files[0];
+      if (!file || !name || !brandId) return;
 
-      try {
-        await db.collection("products").add(product);
-        alert("✅ Product uploaded!");
-        document.getElementById("productForm").reset();
-      } catch (err) {
-        console.error("❌ Upload failed", err);
-        alert("❌ Failed to upload product.");
+      const storageRef = storage.ref(`products/${Date.now()}_${file.name}`);
+      await storageRef.put(file);
+      const imageUrl = await storageRef.getDownloadURL();
+
+      await db.collection("products").add({
+        name,
+        price,
+        description: desc,
+        brandId,
+        imageUrl,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      document.getElementById("productName").value = '';
+      document.getElementById("productPrice").value = '';
+      document.getElementById("productDesc").value = '';
+      document.getElementById("productImage").value = '';
+      loadProducts();
+    }
+
+    async function loadProducts() {
+      productList.innerHTML = '';
+      const snapshot = await db.collection("products").orderBy("timestamp", "desc").get();
+      for (const doc of snapshot.docs) {
+        const data = doc.data();
+        const brandDoc = await db.collection("brands").doc(data.brandId).get();
+        const div = document.createElement("div");
+        div.className = 'product-card';
+        div.innerHTML = `
+          <strong>${data.name}</strong> (${brandDoc.exists ? brandDoc.data().name : 'Unknown'})<br>
+          Ksh ${data.price}<br>
+          ${data.description}<br>
+          <img src="${data.imageUrl}" width="100">
+        `;
+        productList.appendChild(div);
       }
-    });
+    }
 
-    // Brand Modal Logic
-    const brandModal = document.getElementById("brandModal");
-    const newBrandInput = document.getElementById("newBrandInput");
-    const saveBrandBtn = document.getElementById("saveBrandBtn");
-
-    document.getElementById("manageBrandsBtn").onclick = () => {
-      newBrandInput.value = "";
-      brandModal.classList.remove("hidden");
-      newBrandInput.focus();
-    };
-
-    document.getElementById("closeBrandModal").onclick = () => {
-      brandModal.classList.add("hidden");
-    };
-
-    saveBrandBtn.onclick = async () => {
-      const brandName = newBrandInput.value.trim();
-      if (!brandName) return alert("⚠️ Please enter a brand name.");
-
-      saveBrandBtn.disabled = true;
-      try {
-        await db.collection("brands").add({ name: brandName });
-        brandModal.classList.add("hidden");
-        await loadBrands();
-        alert(`✅ Brand "${brandName}" added!`);
-      } catch (err) {
-        console.error(err);
-        alert("❌ Failed to save brand.");
-      }
-      saveBrandBtn.disabled = false;
-    };
-
-    loadBrands();
-  </script>
-</body>
-                                                                        </html>
+    window.onload = async () => {
+      await loadBrands();
+      await loadProducts();
+    }
+  </script></body>
+  </html>
