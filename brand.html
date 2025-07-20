@@ -3,17 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Brand Products</title>
+  <title>Brand Products - ConceptDash</title>
+
+  <!-- Tailwind & Fonts -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <style>
+    .font-pacifico { font-family: 'Pacifico', cursive; }
+    .text-primary { color: #e63946; }
+    .bg-primary { background-color: #e63946; }
+  </style>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 id="brand-title" class="text-2xl font-bold mb-6 text-center"></h1>
-    <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </div>
 
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+    <div class="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-pacifico text-primary">ConceptDash</a>
+      <nav class="flex space-x-4 text-sm items-center">
+        <a href="index.html" class="flex items-center hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+        <a href="cart.html" class="flex items-center hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+        <a href="auth.html" class="flex items-center hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="pt-28 container mx-auto px-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+      <h1 id="brand-title" class="text-2xl font-bold text-center sm:text-left text-primary mb-4 sm:mb-0"></h1>
+      <input type="text" id="searchInput" placeholder="Search products..." class="border border-gray-300 px-4 py-2 rounded w-full sm:w-80 focus:outline-none focus:ring-2 focus:ring-primary">
+    </div>
+
+    <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <!-- Script -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
@@ -21,47 +52,106 @@
       projectId: "concept-dash-e1b60",
       storageBucket: "concept-dash-e1b60.appspot.com",
       messagingSenderId: "442954536333",
-      appId: "1:442954536333:web:143a03ca359ba3219bd9c4",
-      measurementId: "G-RYXJVCDF9K"
+      appId: "1:442954536333:web:143a03ca359ba3219bd9c4"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const brand = urlParams.get("brand");
-
-    document.getElementById("brand-title").textContent = brand + " Products";
+    const brand = new URLSearchParams(window.location.search).get("brand");
+    document.getElementById("brand-title").textContent = `${brand} Products`;
 
     const productList = document.getElementById("product-list");
+    const searchInput = document.getElementById("searchInput");
+    let allProducts = [];
+
+    function renderProducts(products) {
+      productList.innerHTML = "";
+
+      if (products.length === 0) {
+        productList.innerHTML = `<p class="col-span-full text-center text-gray-500">No products found for ${brand}</p>`;
+        return;
+      }
+
+      products.forEach((data) => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl shadow-lg p-4 hover:shadow-2xl transition";
+
+        card.innerHTML = `
+          <img src="${data.imageUrl || 'placeholder.jpg'}"
+            alt="${data.name}"
+            class="w-full h-64 object-contain rounded mb-3 cursor-pointer bg-white"
+            onclick="goToProduct('${data.id}')"
+          />
+          <h2 class="text-xl font-bold text-primary mb-1">${data.name}</h2>
+          <p class="text-gray-600 text-sm mb-1"><strong>Brand:</strong> ${data.brand}</p>
+          <p class="text-gray-600 text-sm mb-1"><strong>Processor:</strong> ${data.processor || 'N/A'}</p>
+          <p class="text-gray-600 text-sm mb-1"><strong>RAM:</strong> ${data.ram || 'N/A'}</p>
+          <p class="text-gray-600 text-sm mb-1"><strong>Storage:</strong> ${data.storage || 'N/A'}</p>
+          <p class="text-gray-600 text-sm mb-1"><strong>Camera:</strong> ${data.camera || 'N/A'}</p>
+          <p class="text-gray-600 text-sm mb-1"><strong>Description:</strong> ${data.description || 'N/A'}</p>
+          <p class="text-green-600 font-bold mt-2">KES ${data.price}</p>
+          <div class="mt-4 flex space-x-2">
+            <button onclick="addToCart('${data.id}', '${data.name}', ${data.price})"
+              class="bg-primary text-white px-3 py-1 rounded hover:bg-red-600 flex-1">
+              <i class="ri-shopping-cart-2-line mr-1"></i> Add to Cart
+            </button>
+            <button onclick='buyNow(${JSON.stringify(data)})' 
+              class="bg-black text-white px-3 py-1 rounded hover:bg-gray-800 flex-1">
+              <i class="ri-flashlight-line mr-1"></i> Buy Now
+            </button>
+          </div>
+        `;
+
+        productList.appendChild(card);
+      });
+    }
 
     db.collection("products")
       .where("brand", "==", brand)
       .get()
       .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          productList.innerHTML = `<p class="text-center text-gray-500 col-span-full">No products found for ${brand}</p>`;
-        } else {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const card = document.createElement("div");
-            card.className = "bg-white rounded-lg shadow-md p-4";
-
-            card.innerHTML = `
-              <img src="${data.imageUrl || 'placeholder.jpg'}" alt="${data.name}" class="w-full h-48 object-cover rounded-md mb-4">
-              <h2 class="text-xl font-semibold">${data.name}</h2>
-              <p class="text-gray-600">${data.shortDescription || ''}</p>
-              <p class="text-green-600 font-bold mt-2">KES ${data.price}</p>
-              <a href="product.html?id=${doc.id}" class="inline-block mt-4 text-blue-600 hover:underline">View Details</a>
-            `;
-
-            productList.appendChild(card);
-          });
-        }
+        allProducts = [];
+        querySnapshot.forEach((doc) => {
+          allProducts.push({ id: doc.id, ...doc.data() });
+        });
+        renderProducts(allProducts);
       })
       .catch(err => {
         console.error("Error fetching brand products:", err);
         productList.innerHTML = `<p class="text-center text-red-600">Failed to load products.</p>`;
       });
+
+    searchInput.addEventListener("input", () => {
+      const search = searchInput.value.toLowerCase();
+      const filtered = allProducts.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        (p.description || "").toLowerCase().includes(search)
+      );
+      renderProducts(filtered);
+    });
+
+    function addToCart(id, name, price) {
+      db.collection("cart").add({ productId: id, name, price })
+        .then(() => alert(`${name} added to cart.`))
+        .catch(err => {
+          alert("Failed to add to cart");
+          console.error(err);
+        });
+    }
+
+    function buyNow(product) {
+      localStorage.setItem("checkoutProduct", JSON.stringify(product));
+      window.location.href = "checkout.html";
+    }
+
+    function goToProduct(id) {
+      window.location.href = `product.html?id=${id}`;
+    }
+
+    window.addToCart = addToCart;
+    window.buyNow = buyNow;
+    window.goToProduct = goToProduct;
   </script>
 </body>
 </html>
