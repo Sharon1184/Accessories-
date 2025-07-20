@@ -1,122 +1,141 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel - Accessories</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Product</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontFamily: {
+          sans: ['Segoe UI', 'sans-serif']
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-100 text-gray-800 p-4">
-  <h1 class="text-3xl font-bold mb-4">Admin Panel - Accessories</h1>  <div class="grid md:grid-cols-2 gap-6">
-    <!-- Brand Form -->
-    <div class="bg-white p-4 rounded-xl shadow">
-      <h2 class="text-xl font-semibold mb-2">Add Brand</h2>
-      <input type="text" id="brandName" placeholder="Brand Name" class="border p-2 w-full mb-2 rounded" />
-      <button onclick="addBrand()" class="bg-blue-600 text-white px-4 py-2 rounded">Add Brand</button>
-    </div><!-- Product Form -->
-<div class="bg-white p-4 rounded-xl shadow">
-  <h2 class="text-xl font-semibold mb-2">Add Product</h2>
-  <input type="text" id="productName" placeholder="Product Name" class="border p-2 w-full mb-2 rounded" />
-  <input type="text" id="productPrice" placeholder="Price" class="border p-2 w-full mb-2 rounded" />
-  <input type="text" id="productImage" placeholder="Image URL" class="border p-2 w-full mb-2 rounded" />
-  <select id="productBrand" class="border p-2 w-full mb-2 rounded"></select>
-  <textarea id="productDesc" placeholder="Description" class="border p-2 w-full mb-2 rounded"></textarea>
-  <button onclick="addProduct()" class="bg-green-600 text-white px-4 py-2 rounded">Add Product</button>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-xl mx-auto p-6 mt-10 bg-white shadow-lg rounded-xl">
+    <h1 class="text-2xl font-bold text-center mb-6">Add a New Product</h1>
+
+    <form id="addProductForm" class="space-y-4">
+      <!-- Product Name -->
+      <div>
+        <label class="block mb-1 font-medium">Product Name</label>
+        <input type="text" id="name" class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- Image URL -->
+      <div>
+        <label class="block mb-1 font-medium">Image URL</label>
+        <input type="url" id="imageUrl" class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label class="block mb-1 font-medium">Price (Ksh)</label>
+        <input type="number" id="price" class="w-full border border-gray-300 rounded px-3 py-2" required />
+      </div>
+
+      <!-- Storage -->
+      <div>
+        <label class="block mb-1 font-medium">Storage</label>
+        <input type="text" id="storage" placeholder="e.g., 128GB" class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- RAM -->
+      <div>
+        <label class="block mb-1 font-medium">RAM</label>
+        <input type="text" id="ram" placeholder="e.g., 6GB" class="w-full border border-gray-300 rounded px-3 py-2" />
+      </div>
+
+      <!-- Brand Dropdown -->
+      <div>
+        <label class="block mb-1 font-medium">Brand</label>
+        <select id="brand" class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="iPhone">iPhone</option>
+          <option value="Samsung">Samsung</option>
+          <option value="Infinix">Infinix</option>
+          <option value="Tecno">Tecno</option>
+          <option value="Xiaomi">Xiaomi</option>
+        </select>
+      </div><!-- Processor -->
+<div>
+  <label class="block mb-1 font-medium">Processor</label>
+  <input type="text" id="processor" placeholder="e.g., Snapdragon 8 Gen 1" class="w-full border border-gray-300 rounded px-3 py-2" />
 </div>
 
-  </div>  <!-- Product List -->  <div class="mt-6 bg-white p-4 rounded-xl shadow">
-    <h2 class="text-xl font-semibold mb-4">All Products</h2>
-    <div id="productList" class="grid gap-4 md:grid-cols-3"></div>
-  </div>  <script>
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      onSnapshot,
-      doc,
-      updateDoc,
-      deleteDoc
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+<!-- Camera -->
+<div>
+  <label class="block mb-1 font-medium">Camera</label>
+  <input type="text" id="camera" placeholder="e.g., 108MP + 12MP" class="w-full border border-gray-300 rounded px-3 py-2" />
+</div>
+
+
+
+      <!-- Submit -->
+      <div>
+        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
+          Add Product
+        </button>
+      </div>
+    </form>
+
+    <p id="successMessage" class="text-green-600 font-semibold text-center mt-4 hidden">Product added successfully!</p>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    // =================== Firebase Config ===================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
-      authDomain: "food-ae7ff.firebaseapp.com",
-      projectId: "food-ae7ff",
-      storageBucket: "food-ae7ff.appspot.com",
-      messagingSenderId: "51623531214",
-      appId: "1:51623531214:web:8d73e755e85ed925b861db"
+      authDomain: "concept-dash-e1b60.firebaseapp.com",
+      projectId: "concept-dash-e1b60",
+      storageBucket: "concept-dash-e1b60.appspot.com",
+      messagingSenderId: "178057276428",
+      appId: "1:178057276428:web:fc0be4dfbd1a2e1f48ee0f"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const productsRef = collection(db, "products");
 
-    const brandSelect = document.getElementById("productBrand");
+    // =================== Form Handling ===================
+    const form = document.getElementById("addProductForm");
+    const successMsg = document.getElementById("successMessage");
 
-    async function addBrand() {
-      const brand = document.getElementById("brandName").value.trim();
-      if (brand === "") return alert("Enter brand name");
-      await addDoc(collection(db, "brands"), { name: brand });
-      document.getElementById("brandName").value = "";
-    }
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    async function loadBrands() {
-      const brandsSnap = await getDocs(collection(db, "brands"));
-      brandSelect.innerHTML = "";
-      brandsSnap.forEach(doc => {
-        const opt = document.createElement("option");
-        opt.value = doc.data().name;
-        opt.textContent = doc.data().name;
-        brandSelect.appendChild(opt);
-      });
-    }
+      const name = document.getElementById("name").value;
+      const imageUrl = document.getElementById("imageUrl").value;
+      const price = parseInt(document.getElementById("price").value);
+      const storage = document.getElementById("storage").value;
+      const ram = document.getElementById("ram").value;
+      const brand = document.getElementById("brand").value;
 
-    async function addProduct() {
-      const name = document.getElementById("productName").value.trim();
-      const price = document.getElementById("productPrice").value.trim();
-      const imageUrl = document.getElementById("productImage").value.trim();
-      const brand = brandSelect.value;
-      const description = document.getElementById("productDesc").value.trim();
-      if (!name || !price || !imageUrl || !brand) return alert("Fill all fields");
-      await addDoc(collection(db, "products"), {
-        name, price, imageUrl, brand, description
-      });
-      document.getElementById("productName").value = "";
-      document.getElementById("productPrice").value = "";
-      document.getElementById("productImage").value = "";
-      document.getElementById("productDesc").value = "";
-    }
+      try {
+        await addDoc(productsRef, {
+          name,
+          imageUrl,
+          price,
+          storage,
+          ram,
+          brand,
+          createdAt: new Date()
+        });
 
-    async function loadProducts() {
-      const productList = document.getElementById("productList");
-      productList.innerHTML = "";
-      const snapshot = await getDocs(collection(db, "products"));
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const div = document.createElement("div");
-        div.className = "border p-2 rounded shadow";
-        div.innerHTML = `
-          <img src="${data.imageUrl}" class="w-full h-48 object-cover rounded mb-2" />
-          <h3 class="text-lg font-bold">${data.name}</h3>
-          <p>Brand: ${data.brand}</p>
-          <p>KES ${data.price}</p>
-          <p class="text-sm">${data.description}</p>
-          <button onclick="deleteProduct('${docSnap.id}')" class="mt-2 text-red-600">Delete</button>
-        `;
-        productList.appendChild(div);
-      });
-    }
-
-    async function deleteProduct(id) {
-      await deleteDoc(doc(db, "products", id));
-      loadProducts();
-    }
-
-    window.addEventListener("load", () => {
-      loadBrands();
-      loadProducts();
+        successMsg.classList.remove("hidden");
+        form.reset();
+        setTimeout(() => successMsg.classList.add("hidden"), 3000);
+      } catch (error) {
+        alert("Failed to add product: " + error.message);
+      }
     });
-  </script></body>
+  </script>
+</body>
 </html>
