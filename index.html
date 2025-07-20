@@ -1,7 +1,13 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ConceptDash - Authentic Products</title>  <!-- Tailwind CSS via CDN -->  <script src="https://cdn.tailwindcss.com"></script>  <script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConceptDash - Authentic Products</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -10,37 +16,89 @@
           },
           borderRadius: {
             button: '8px'
+          },
+          fontFamily: {
+            pacifico: ['Pacifico', 'cursive']
           }
         }
       }
     }
-  </script>  <!-- Google Fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />  <!-- Remix Icon -->  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />  <!-- Firebase -->  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>  <!-- Custom CSS -->  <link rel="stylesheet" href="styles.css" />
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+  <!-- Custom CSS (optional) -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="bg-gray-50">
-  <!-- Header Section -->
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+  <!-- Header -->
   <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <!-- Logo -->
-      <div class="flex items-center">
-        <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
-      </div>
-      <!-- Navigation Links -->
+      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
+
+      <!-- Nav -->
       <nav class="flex space-x-6 text-sm items-center">
         <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
         <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
-        <a href="add.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-add-line mr-1"></i>Add Item</a>
         <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
         <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
       </nav>
     </div>
-  </header>  <!-- Main Content -->  <main class="pt-24 px-4 max-w-7xl mx-auto">
-    <!-- Categories + Products Display -->
+  </header>
+
+  <!-- Main -->
+  <main class="pt-24 px-4 max-w-7xl mx-auto flex-1 w-full">
     <section id="categoriesContainer" class="mt-10">
       <!-- Dynamic categories will be inserted here by app.js -->
     </section>
-  </main>  <!-- Footer -->  <footer class="bg-white text-center py-4 text-sm text-gray-600 mt-10">
-    &copy; 2025 ConceptDash. All rights reserved.
-  </footer>  <!-- JS Logic -->  <script src="app.js"></script></body>
-        </html>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-gray-600 text-sm border-t">
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <!-- About -->
+      <div>
+        <h4 class="font-semibold mb-2">About ConceptDash</h4>
+        <p>Your trusted source for authentic tech and lifestyle products. Shop smart, shop ConceptDash.</p>
+      </div>
+
+      <!-- Contact Info -->
+      <div>
+        <h4 class="font-semibold mb-2">Contact</h4>
+        <p>Email: support@conceptdash.com</p>
+        <p>Phone: +254 712 345 678</p>
+        <p>Nairobi, Kenya</p>
+      </div>
+
+      <!-- Social Links -->
+      <div>
+        <h4 class="font-semibold mb-2">Follow Us</h4>
+        <div class="flex space-x-4 text-lg">
+          <a href="#" class="hover:text-primary" title="Facebook"><i class="ri-facebook-circle-line"></i></a>
+          <a href="#" class="hover:text-primary" title="Instagram"><i class="ri-instagram-line"></i></a>
+          <a href="#" class="hover:text-primary" title="X / Twitter"><i class="ri-twitter-x-line"></i></a>
+          <a href="#" class="hover:text-primary" title="YouTube"><i class="ri-youtube-line"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center py-4 border-t text-xs text-gray-400">
+      &copy; 2025 ConceptDash. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+</body>
+  </html>
