@@ -12,96 +12,137 @@
       theme: {
         extend: {
           colors: {
-            primary: '#e63946'
+            primary: '#e63946',
           },
           borderRadius: {
-            button: '8px'
+            button: '8px',
           },
           fontFamily: {
-            pacifico: ['Pacifico', 'cursive']
-          }
-        }
-      }
-    }
+            pacifico: ['Pacifico', 'cursive'],
+          },
+        },
+      },
+    };
   </script>
 
   <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 
-  <!-- Custom CSS (optional) -->
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-<body class="bg-gray-50 flex flex-col min-h-screen">
   <!-- Header -->
   <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
-
-      <!-- Nav -->
-      <nav class="flex space-x-6 text-sm items-center">
-        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
-        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
-        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
-        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
+    <div class="container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-pacifico text-primary">ConceptDash</a>
+      <nav class="flex space-x-4 text-sm items-center">
+        <a href="index.html" class="flex items-center hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
+        <a href="cart.html" class="flex items-center hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
+        <a href="auth.html" class="flex items-center hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main -->
-  <main class="pt-24 px-4 max-w-7xl mx-auto flex-1 w-full">
-    <section id="categoriesContainer" class="mt-10">
-      <!-- Dynamic categories will be inserted here by app.js -->
-    </section>
-  </main>
+  <!-- Main Content -->
+  <main class="pt-24 px-4 flex-1 w-full max-w-7xl mx-auto">
+  <h2 class="text-xl font-semibold mb-6 text-gray-700">Choose a Brand</h2>
+  <section class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    
+    <!-- iPhone -->
+    <a href="brand.html?brand=iPhone" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+      <img src="https://alephksa.com/cdn/shop/files/iPhone_16_Pro_Max_White_Titanium_PDP_Image_Position_1__en-ME_1b7c0966-4747-4174-8e96-47b5226d7e4f.jpg?v=1750067799&width=1920"
+           alt="iPhone"
+           class="mx-auto h-48 w-full object-contain mb-3">
+      <p class="text-lg font-semibold">iPhone</p>
+    </a>
 
-  <!-- Footer (improved styling) -->
+    <!-- Samsung -->
+    <a href="brand.html?brand=Samsung" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+      <img src="https://www.phoneplacekenya.com/wp-content/uploads/2024/04/Samsung-Galaxy-S25-Ultra-a.jpg"
+           alt="Samsung"
+           class="mx-auto h-48 w-full object-contain mb-3">
+      <p class="text-lg font-semibold">Samsung</p>
+    </a>
+
+    <!-- Vivo -->
+    <a href="brand.html?brand=Vivo" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+      <img src="https://phonehubkenya.co.ke/wp-content/uploads/2023/06/Vivo-V27-5G.jpg"
+           alt="Vivo"
+           class="mx-auto h-48 w-full object-contain mb-3">
+      <p class="text-lg font-semibold">Vivo</p>
+    </a>
+
+    <!-- Xiaomi -->
+<a href="brand.html?brand=Xiaomi" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+  <img src="https://www.phoneplacekenya.com/wp-content/uploads/2024/06/Xiaomi-14T-Pro-b.jpg"
+       alt="Xiaomi"
+       class="mx-auto h-48 w-full object-contain mb-3">
+  <p class="text-lg font-semibold">Xiaomi</p>
+</a>
+
+
+
+   <!-- Infinix -->
+<a href="brand.html?brand=Infinix" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+  <img src="https://www.phoneplacekenya.com/wp-content/uploads/2024/10/Infinix-Hot-50-Pro-Plus1.jpg"
+       alt="Infinix"
+       class="mx-auto h-48 w-full object-contain mb-3">
+  <p class="text-lg font-semibold">Infinix</p>
+</a>
+
+
+    <!-- Tecno -->
+    <a href="brand.html?brand=Tecno" class="bg-white rounded-lg shadow p-4 hover:shadow-lg transition text-center">
+      <img src="https://www.phoneplacekenya.com/wp-content/uploads/2023/12/Tecno-Spark-20-Pro-Plus.jpg"
+           alt="Tecno"
+           class="mx-auto h-48 w-full object-contain mb-3">
+      <p class="text-lg font-semibold">Tecno</p>
+    </a>
+
+    <!-- Add more brands as needed following same structure -->
+
+  </section>
+</main>
+
+
+  <!-- Footer -->
   <footer class="bg-gray-100 text-gray-700 text-sm border-t mt-16">
-    <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-3 gap-10">
-      
-      <!-- About -->
+    <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
       <div>
-        <h4 class="text-lg font-bold text-primary mb-3">About ConceptDash</h4>
+        <h4 class="text-lg font-semibold text-primary mb-3">About ConceptDash</h4>
         <p class="leading-relaxed">Your trusted source for authentic tech and lifestyle products. Shop smart, shop ConceptDash.</p>
       </div>
-
-      <!-- Contact Info -->
       <div>
-        <h4 class="text-lg font-bold text-primary mb-3">Contact</h4>
+        <h4 class="text-lg font-semibold text-primary mb-3">Contact</h4>
         <ul class="space-y-1">
           <li>Email: <a href="mailto:support@conceptdash.com" class="hover:underline">support@conceptdash.com</a></li>
           <li>Phone: +254 712 345 678</li>
           <li>Location: Nairobi, Kenya</li>
         </ul>
       </div>
-
-      <!-- Social Links -->
       <div>
-        <h4 class="text-lg font-bold text-primary mb-3">Follow Us</h4>
+        <h4 class="text-lg font-semibold text-primary mb-3">Follow Us</h4>
         <div class="flex space-x-4 text-xl">
-          <a href="#" class="hover:text-primary transition duration-200"><i class="ri-facebook-circle-line"></i></a>
-          <a href="#" class="hover:text-primary transition duration-200"><i class="ri-instagram-line"></i></a>
-          <a href="#" class="hover:text-primary transition duration-200"><i class="ri-twitter-x-line"></i></a>
-          <a href="#" class="hover:text-primary transition duration-200"><i class="ri-youtube-line"></i></a>
+          <a href="#" aria-label="Facebook" class="hover:text-primary"><i class="ri-facebook-circle-line"></i></a>
+          <a href="#" aria-label="Instagram" class="hover:text-primary"><i class="ri-instagram-line"></i></a>
+          <a href="#" aria-label="Twitter" class="hover:text-primary"><i class="ri-twitter-x-line"></i></a>
+          <a href="#" aria-label="YouTube" class="hover:text-primary"><i class="ri-youtube-line"></i></a>
         </div>
       </div>
     </div>
-
     <div class="border-t border-gray-300 py-4 text-center text-xs text-gray-500">
       &copy; 2025 ConceptDash. All rights reserved.
     </div>
   </footer>
-
-  <!-- App Logic -->
-  <script src="app.js"></script>
 </body>
-          </html>
+</html>
