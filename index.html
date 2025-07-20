@@ -1,104 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ConceptDash - Authentic Products</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#e63946'
-          },
-          borderRadius: {
-            button: '8px'
-          },
-          fontFamily: {
-            pacifico: ['Pacifico', 'cursive']
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
-
-  <!-- Custom CSS (optional) -->
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept | Home</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-
-<body class="bg-gray-50 flex flex-col min-h-screen">
-  <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="index.html" class="text-xl font-bold text-primary font-pacifico">ConceptDash</a>
-
-      <!-- Nav -->
-      <nav class="flex space-x-6 text-sm items-center">
-        <a href="index.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-home-line mr-1"></i>Home</a>
-        <a href="catgry.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-apps-line mr-1"></i>Categories</a>
-        <a href="cart.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-shopping-cart-line mr-1"></i>Cart</a>
-        <a href="auth.html" class="flex items-center text-gray-700 hover:text-primary"><i class="ri-user-line mr-1"></i>Login</a>
-      </nav>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-gray-800">Concept Accessories</h1>
+  </header>  <main class="p-4">
+    <h2 class="text-2xl font-semibold mb-4 text-center">Top Picks by Brand</h2>
+    <div id="slideshow" class="relative w-full h-64 overflow-hidden rounded-xl">
+      <div id="slides" class="flex transition-all duration-700 ease-in-out"></div>
     </div>
-  </header>
-
-  <!-- Main -->
-  <main class="pt-24 px-4 max-w-7xl mx-auto flex-1 w-full">
-    <section id="categoriesContainer" class="mt-10">
-      <!-- Dynamic categories will be inserted here by app.js -->
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-white text-gray-600 text-sm border-t">
-    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
-      <!-- About -->
+  </main>  <footer class="mt-10 bg-gray-900 text-white p-6">
+    <div class="max-w-6xl mx-auto flex justify-between flex-wrap">
       <div>
-        <h4 class="font-semibold mb-2">About ConceptDash</h4>
-        <p>Your trusted source for authentic tech and lifestyle products. Shop smart, shop ConceptDash.</p>
+        <h3 class="font-bold text-lg mb-2">Concept Accessories</h3>
+        <p class="text-sm">Premium electronics & accessories just for you.</p>
       </div>
-
-      <!-- Contact Info -->
       <div>
-        <h4 class="font-semibold mb-2">Contact</h4>
-        <p>Email: support@conceptdash.com</p>
-        <p>Phone: +254 712 345 678</p>
-        <p>Nairobi, Kenya</p>
+        <h3 class="font-bold text-lg mb-2">Quick Links</h3>
+        <ul>
+          <li><a href="#" class="text-sm hover:underline">Home</a></li>
+          <li><a href="#" class="text-sm hover:underline">Brands</a></li>
+          <li><a href="#" class="text-sm hover:underline">Contact</a></li>
+        </ul>
       </div>
-
-      <!-- Social Links -->
       <div>
-        <h4 class="font-semibold mb-2">Follow Us</h4>
-        <div class="flex space-x-4 text-lg">
-          <a href="#" class="hover:text-primary" title="Facebook"><i class="ri-facebook-circle-line"></i></a>
-          <a href="#" class="hover:text-primary" title="Instagram"><i class="ri-instagram-line"></i></a>
-          <a href="#" class="hover:text-primary" title="X / Twitter"><i class="ri-twitter-x-line"></i></a>
-          <a href="#" class="hover:text-primary" title="YouTube"><i class="ri-youtube-line"></i></a>
-        </div>
+        <h3 class="font-bold text-lg mb-2">Connect</h3>
+        <p class="text-sm">Email: support@concept.com</p>
+        <p class="text-sm">Phone: +254 700 000 000</p>
       </div>
     </div>
+    <p class="text-center text-xs text-gray-400 mt-4">&copy; 2025 Concept. All rights reserved.</p>
+  </footer>  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
+      authDomain: "concept-dash-e1b60.firebaseapp.com",
+      projectId: "concept-dash-e1b60",
+      storageBucket: "concept-dash-e1b60.appspot.com",
+      messagingSenderId: "220356697433",
+      appId: "1:220356697433:web:99f8ccfa61da9cf516fb2b"
+    };
 
-    <div class="text-center py-4 border-t text-xs text-gray-400">
-      &copy; 2025 ConceptDash. All rights reserved.
-    </div>
-  </footer>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-  <!-- App Logic -->
-  <script src="app.js"></script>
-</body>
+    async function loadSlides() {
+      const slidesDiv = document.getElementById('slides');
+      const brandSnapshot = await db.collection('brands').get();
+      const brands = brandSnapshot.docs.map(doc => doc.data().name);
+
+      for (let brand of brands) {
+        const prodSnap = await db.collection('products')
+          .where('brand', '==', brand)
+          .limit(1).get();
+
+        prodSnap.forEach(doc => {
+          const p = doc.data();
+          const slide = document.createElement('div');
+          slide.className = "min-w-full h-64 bg-white flex flex-col justify-center items-center text-center p-4 shadow";
+          slide.innerHTML = `
+            <img src="${p.imageUrl}" class="h-32 object-contain mb-2" alt="${p.name}" />
+            <h3 class="text-lg font-semibold">${p.name}</h3>
+            <p class="text-sm text-gray-500 mb-2">${brand}</p>
+            <button onclick="window.location.href='brand.html?brand=${encodeURIComponent(brand)}'" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">See all</button>
+          `;
+          slidesDiv.appendChild(slide);
+        });
+      }
+
+      autoSlide();
+    }
+
+    let currentIndex = 0;
+    function autoSlide() {
+      const slides = document.getElementById('slides');
+      setInterval(() => {
+        currentIndex++;
+        if (currentIndex >= slides.children.length) currentIndex = 0;
+        slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      }, 4000);
+    }
+
+    loadSlides();
+  </script></body>
   </html>
