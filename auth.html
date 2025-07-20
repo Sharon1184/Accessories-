@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Auth - ConceptDash</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#e63946' },
+          fontFamily: { pacifico: ['Pacifico', 'cursive'] }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4">
+
+  <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-pacifico text-primary text-center mb-6">ConceptDash</h2>
+
+    <div class="flex justify-center space-x-6 mb-6">
+      <button id="loginTab" onclick="switchTab('login')" class="pb-1 border-b-2 border-primary text-primary font-semibold">Login</button>
+      <button id="signupTab" onclick="switchTab('signup')" class="pb-1 border-b-2 border-transparent text-gray-600 font-semibold">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="space-y-4">
+      <input type="email" id="loginEmail" placeholder="Email" class="w-full border px-4 py-2 rounded" required>
+      <input type="password" id="loginPassword" placeholder="Password" class="w-full border px-4 py-2 rounded" required>
+      <select id="loginRole" class="w-full border px-4 py-2 rounded">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit" class="w-full bg-primary text-white py-2 rounded">Login</button>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signupForm" class="space-y-4 hidden">
+      <input type="text" id="signupName" placeholder="Full Name" class="w-full border px-4 py-2 rounded" required>
+      <input type="email" id="signupEmail" placeholder="Email" class="w-full border px-4 py-2 rounded" required>
+      <input type="password" id="signupPassword" placeholder="Password" class="w-full border px-4 py-2 rounded" required>
+      
+      <button type="submit" class="w-full bg-primary text-white py-2 rounded">Sign Up</button>
+    </form>
+  </div>
+
+  <!-- Firebase Config -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB1geQ2jsqrAGw50NLnBncWvxCPD_n5Kqk",
+    authDomain: "concept-dash-e1b60.firebaseapp.com",
+    projectId: "concept-dash-e1b60",
+    storageBucket: "concept-dash-e1b60.appspot.com",
+    messagingSenderId: "60789510392",
+    appId: "1:60789510392:web:4982d8b3646506ed6d5e38"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
+  <!-- Form Logic -->
+  <script>
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    function switchTab(tab) {
+      if (tab === "login") {
+        loginForm.classList.remove("hidden");
+        signupForm.classList.add("hidden");
+        loginTab.classList.add("border-primary", "text-primary");
+        signupTab.classList.remove("border-primary", "text-primary");
+      } else {
+        signupForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+        signupTab.classList.add("border-primary", "text-primary");
+        loginTab.classList.remove("border-primary", "text-primary");
+      }
+    }
+
+    // SIGN UP
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("signupName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const role = document.getElementById("signupRole").value;
+
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await db.collection("users").doc(cred.user.uid).set({
+          name,
+          email,
+          role
+        });
+        window.location.href = role === "admin" ? "add.html" : "index.html";
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    // LOGIN
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      const selectedRole = document.getElementById("loginRole").value;
+
+      try {
+        const cred = await auth.signInWithEmailAndPassword(email, password);
+        const userDoc = await db.collection("users").doc(cred.user.uid).get();
+        const userData = userDoc.data();
+
+        if (userData && userData.role === selectedRole) {
+          window.location.href = selectedRole === "admin" ? "add.html" : "index.html";
+        } else {
+          alert("Role mismatch. Try correct role or contact support.");
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
